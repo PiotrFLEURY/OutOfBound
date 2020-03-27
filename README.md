@@ -8,9 +8,9 @@ Locate the user and notifiy him when he goes out of the bound that he specified 
 
 ## Participation
 
-Each participant must create a branch named as follow :
+Each participant must create a branch for each feature named as follow :
 
-feat/<FEATURE_NAME>
+feat/<USER_NAME>/<FEATURE_NAME>
 
 ## Feature 1 - Hello world
 
