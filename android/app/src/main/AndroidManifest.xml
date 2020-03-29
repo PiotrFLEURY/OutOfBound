@@ -14,9 +14,7 @@
     <application
         android:name="io.flutter.app.FlutterApplication"
         android:label="OutOfBounds"
-        android:icon="@mipmap/ic_launcher">
-
-
+        android:icon="@drawable/fence">
         <activity
             android:name=".MainActivity"
             android:launchMode="singleTop"
