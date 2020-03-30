@@ -1,7 +1,15 @@
-import 'package:OutOfBounds/nve/nve-main-page.dart';
-import 'package:OutOfBounds/zht/zht-main-page.dart';
+//import 'package:OutOfBounds/nve/nve-main-page.dart';
+//import 'package:OutOfBounds/zht/zht-main-page.dart';
 import 'package:flutter/material.dart';
+import './pages/home_page.dart';
 
+
+void main(){
+  runApp(new MaterialApp(
+    home: new HomePage(),
+  ));
+}
+/*
 void main() {
   runApp(MyApp());
 }
@@ -14,9 +22,6 @@ class MyApp extends StatelessWidget {
       title: 'Flutter Demo',
       theme: ThemeData(
         primarySwatch: Colors.blue,
-      ),
-      body: Center(
-        child: Text('Hello World'),
       ),
       initialRoute: '/',
       routes: {
@@ -48,4 +53,4 @@ class HomePage extends StatelessWidget {
       ),
     );
   }
-}
+}*/
