@@ -1,4 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:OutOfBounds/zht/pages/StartPositionPage.dart';
+import 'package:OutOfBounds/zht/pages/ActualPosition.dart';
+import 'package:OutOfBounds/zht/pages/SettingsPage.dart';
 
 class ZhtMainPage extends StatefulWidget {
   @override
@@ -8,6 +11,13 @@ class ZhtMainPage extends StatefulWidget {
 }
 
 class MyAppState extends State<ZhtMainPage> {
+  int whoSelected = 0;
+  final itemsChoice = [
+    StartPositionPage(),
+    ActualPosition(),
+    SettingsPage(),
+  ];
+
   @override
   Widget build(BuildContext context) {
     return new MaterialApp(
@@ -16,7 +26,14 @@ class MyAppState extends State<ZhtMainPage> {
         appBar: AppBar(
           title: Text('OutOfBound Application'),
         ),
+        body: itemsChoice[whoSelected],
         bottomNavigationBar: BottomNavigationBar(
+          currentIndex: whoSelected,
+          onTap: (int index) {
+            setState(() {
+              whoSelected = index;
+            });
+          },
           items: [
             BottomNavigationBarItem(
               icon: Icon(Icons.home),
