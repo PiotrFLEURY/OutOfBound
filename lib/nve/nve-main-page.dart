@@ -15,7 +15,12 @@ class FirstScreen extends StatelessWidget {
     return new Scaffold(
       body: Center(child: new Text(
           "Hello World"
-      )
-    ));
+      )),
+      bottomNavigationBar: BottomNavigationBar(items: [
+        BottomNavigationBarItem(icon: Icon(Icons.home), title: Text("Start position")),
+        BottomNavigationBarItem(icon: Icon(Icons.arrow_back), title: Text("Actual position")),
+        BottomNavigationBarItem(icon: Icon(Icons.settings), title: Text("Settings")),
+      ]),
+    );
   }
 }
