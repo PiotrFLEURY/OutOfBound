@@ -1,15 +1,7 @@
-//import 'package:OutOfBounds/nve/nve-main-page.dart';
-//import 'package:OutOfBounds/zht/zht-main-page.dart';
+import 'package:OutOfBounds/nve/nve-main-page.dart';
+import 'package:OutOfBounds/zht/zht-main-page.dart';
 import 'package:flutter/material.dart';
-import './pages/home_page.dart';
 
-
-void main(){
-  runApp(new MaterialApp(
-    home: new HomePage(),
-  ));
-}
-/*
 void main() {
   runApp(MyApp());
 }
@@ -53,4 +45,4 @@ class HomePage extends StatelessWidget {
       ),
     );
   }
-}*/
+}
