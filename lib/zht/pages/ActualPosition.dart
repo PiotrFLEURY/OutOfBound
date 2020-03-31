@@ -8,6 +8,11 @@ class ActualPosition extends StatefulWidget {
 
 class ActualPositionState extends State<ActualPosition>{
 
+   Location location = new Location();
+    bool _serviceEnabled;
+    PermissionStatus _permissionGranted;
+    LocationData _locationData;
+
   @override
   void initState(){
     super.initState();
@@ -15,11 +20,7 @@ class ActualPositionState extends State<ActualPosition>{
   }
 
   void requestPermission() async{
-
-    Location location = new Location();
-    bool _serviceEnabled;
-    PermissionStatus _permissionGranted;
-
+    
     _serviceEnabled = await location.serviceEnabled();
     if (!_serviceEnabled) {
       _serviceEnabled = await location.requestService();
@@ -36,17 +37,25 @@ class ActualPositionState extends State<ActualPosition>{
       }
     }
 
+    _locationData = await location.getLocation();
+
   }
 
   @override
   Widget build(BuildContext context){
      return new MaterialApp(
-         home: new Scaffold(
+        home: new Scaffold(
         backgroundColor: Colors.blue,
-        
+        body: Center(
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: <Widget>[
+            if (_locationData != null)
+              Text("LATITUDE: ${_locationData.latitude}, LONGITUDE: ${_locationData.longitude}"),
+            ],
+          ),
+        ),
       ),
-    
     );
   }
-
 }
