@@ -41,5 +41,9 @@
 	</array>
 	<key>UIViewControllerBasedStatusBarAppearance</key>
 	<false/>
+	<key>NSLocationWhenInUseUsageDescription</key>
+	<string>L'application a besoin de la localisation pour répondre à votre requête</string>
+	<key>NSLocationAlwaysUsageDescription</key>
+<string>L'application a besoin de la localisation pour envoyer des notifications sur des événements au plus près de vous</string>
 </dict>
 </plist>
