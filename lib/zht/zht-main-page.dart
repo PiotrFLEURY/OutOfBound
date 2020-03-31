@@ -3,7 +3,6 @@ import 'package:flutter/material.dart';
 class ZhtMainPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    // TODO: implement build
      return new MaterialApp(
       title: 'OutOfBound Application',
       home: Scaffold(
@@ -15,6 +14,5 @@ class ZhtMainPage extends StatelessWidget {
           ),
       ),
 );
-    throw UnimplementedError();
   }
 }
