@@ -14,8 +14,13 @@ class ActualPositionState extends State<ActualPosition>{
   LocationData _locationData;
 
   @override
-  void initState() async{
+  void initState(){
     super.initState();
+    initLocation(); 
+  }
+
+  void initLocation() async {
+
     _serviceEnabled = await location.serviceEnabled();
     if (!_serviceEnabled) {
       _serviceEnabled = await location.requestService();
@@ -31,31 +36,27 @@ class ActualPositionState extends State<ActualPosition>{
         return;
       }
     }
-
+    
     _locationData = await location.getLocation();
-    @override
-    void setState (){
-    }
+    setState(() {    
+    }); 
 
   }
 
-  
-    getLatandLng(){
-      if (_locationData != null)   
-        return  Text("LATITUDE: ${_locationData.latitude}, LONGITUDE: ${_locationData.longitude}");
-      else
-         // return Text("LATITUDE: ${_locationData.latitude}");
-        return Text("test");
-    }
+  getLatandLng(){
+    if (_locationData != null)   
+      return  Text("LATITUDE: ${_locationData.latitude}, LONGITUDE: ${_locationData.longitude}");
+  }
+
   @override
   Widget build(BuildContext context){
-     return new MaterialApp(
-        home: new Scaffold(
-        backgroundColor: Colors.blue,
+    return new MaterialApp(
+      home: new Scaffold(
+        backgroundColor: Colors.red,
         body: Center(
-        child: getLatandLng(),
-      ),
+          child: getLatandLng(),
         ),
+      ),
     );
   }
 
