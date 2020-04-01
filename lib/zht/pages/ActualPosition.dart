@@ -8,15 +8,16 @@ class ActualPosition extends StatefulWidget {
 
 class ActualPositionState extends State<ActualPosition>{
 
-   Location location = new Location();
-    bool _serviceEnabled;
-    PermissionStatus _permissionGranted;
-    LocationData _locationData;
+  Location location = new Location();
+  bool _serviceEnabled;
+  PermissionStatus _permissionGranted;
+  LocationData _locationData;
 
   @override
-  void initState(){
+  void initState() {
     super.initState();
     requestPermission();
+
   }
 
   void requestPermission() async{
@@ -28,7 +29,7 @@ class ActualPositionState extends State<ActualPosition>{
         return;
       }
     }
-
+    
     _permissionGranted = await location.hasPermission();
     if (_permissionGranted == PermissionStatus.denied) {
       _permissionGranted = await location.requestPermission();
@@ -38,24 +39,35 @@ class ActualPositionState extends State<ActualPosition>{
     }
 
     _locationData = await location.getLocation();
-
+    @override
+    void setState (){
+    }
+    
   }
-
+  
+    getLatandLng(){
+      if (_locationData != null)   
+        return  Text("LATITUDE: ${_locationData.latitude}, LONGITUDE: ${_locationData.longitude}");
+      else
+         // return Text("LATITUDE: ${_locationData.latitude}");
+        return Text("test");
+    }
   @override
   Widget build(BuildContext context){
      return new MaterialApp(
         home: new Scaffold(
         backgroundColor: Colors.blue,
         body: Center(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: <Widget>[
-            if (_locationData != null)
-              Text("LATITUDE: ${_locationData.latitude}, LONGITUDE: ${_locationData.longitude}"),
-            ],
-          ),
-        ),
+       // child: Column(
+       //   mainAxisAlignment: MainAxisAlignment.center,
+        child: getLatandLng(),
+            
+          //),
+       // ),
       ),
+        ),
     );
   }
+
+  
 }
