@@ -68,14 +68,12 @@ class MyStatefulRedPage extends StatefulWidget {
 }
 
 class RedPage extends State<MyStatefulRedPage> {
-  bool _result;
-
-  Future<bool> askPermission() async {
+  Future<void> askPermission() async {
     _serviceEnabled = await location.serviceEnabled();
     if (!_serviceEnabled) {
       _serviceEnabled = await location.requestService();
       if (!_serviceEnabled) {
-        return false;
+        return;
       }
     }
 
@@ -83,19 +81,18 @@ class RedPage extends State<MyStatefulRedPage> {
     if (_permissionGranted == PermissionStatus.denied) {
       _permissionGranted = await location.requestPermission();
       if (_permissionGranted != PermissionStatus.granted) {
-        return false;
+        return;
       }
     }
 
     _locationData = await location.getLocation();
-    return true;
   }
 
   @override
   void initState() {
     askPermission().then((result) {
       setState(() {
-        _result = result;
+        
       });
     });
     super.initState();
@@ -103,7 +100,7 @@ class RedPage extends State<MyStatefulRedPage> {
 
   @override
   Widget build(BuildContext ctxt) {
-    if (_result == true) {
+    if (_locationData != null) {
       return new Scaffold(
         backgroundColor: Colors.red,
         body:
