@@ -17,53 +17,19 @@ class MyStatefulWidget extends StatefulWidget {
 }
 
 class FirstScreen extends State<MyStatefulWidget> {
-  int _selectedIndex;
-
-  @override
-  void initState() {
-    super.initState();
-
-    _selectedIndex = 0;
-  }
+  int _selectedIndex = 0;
+  final List<Widget> _children = [BluePage(), RedPage(), GreenPage()];
 
   void _onItemTapped(int index) {
     setState(() {
-    _selectedIndex = index;
-      switch (index) {
-        case 0:
-        {
-          Navigator.push(
-            context, 
-            new MaterialPageRoute(builder: (context) => new BluePage()),
-          );
-          break;
-        }
-        case 1:
-        {
-          Navigator.push(
-            context, 
-            new MaterialPageRoute(builder: (context) => new RedPage()),
-          );
-          break;
-        }
-        case 2:
-        {
-          Navigator.push(
-            context, 
-            new MaterialPageRoute(builder: (context) => new GreenPage()),
-          );
-          break;
-        }
-      }
+      _selectedIndex = index;
     });
   }
 
   @override
   Widget build(BuildContext ctxt) {
     return new Scaffold(
-      body: Center(child: new Text(
-          "Hello World"
-      )),
+      body: _children[_selectedIndex],
       bottomNavigationBar: BottomNavigationBar(
         currentIndex: _selectedIndex,
         onTap: (index) => _onItemTapped(index),
