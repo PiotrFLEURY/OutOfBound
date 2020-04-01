@@ -24,26 +24,9 @@ class MyStatefulWidget extends StatefulWidget {
 
 class FirstScreen extends State<MyStatefulWidget> {
   int _selectedIndex = 0;
-  final List<Widget> _children = [BluePage(), RedPage(), GreenPage()];
+  final List<Widget> _children = [BluePage(), MyStatefulRedPage(), GreenPage()];
 
-  Future<void> _onItemTapped(int index) async {
-    _serviceEnabled = await location.serviceEnabled();
-    if (!_serviceEnabled) {
-      _serviceEnabled = await location.requestService();
-      if (!_serviceEnabled) {
-        return;
-      }
-    }
-
-    _permissionGranted = await location.hasPermission();
-    if (_permissionGranted == PermissionStatus.denied) {
-      _permissionGranted = await location.requestPermission();
-      if (_permissionGranted != PermissionStatus.granted) {
-        return;
-      }
-    }
-
-    _locationData = await location.getLocation();
+  void _onItemTapped(int index) {
     setState(() {
       _selectedIndex = index;
     });
@@ -77,20 +60,66 @@ class BluePage extends StatelessWidget {
   }
 }
 
-class RedPage extends StatelessWidget {
+class MyStatefulRedPage extends StatefulWidget {
+  MyStatefulRedPage({Key key}) : super(key: key);
+
+  @override
+  RedPage createState() => RedPage();
+}
+
+class RedPage extends State<MyStatefulRedPage> {
+  bool _result;
+
+  Future<bool> askPermission() async {
+    _serviceEnabled = await location.serviceEnabled();
+    if (!_serviceEnabled) {
+      _serviceEnabled = await location.requestService();
+      if (!_serviceEnabled) {
+        return false;
+      }
+    }
+
+    _permissionGranted = await location.hasPermission();
+    if (_permissionGranted == PermissionStatus.denied) {
+      _permissionGranted = await location.requestPermission();
+      if (_permissionGranted != PermissionStatus.granted) {
+        return false;
+      }
+    }
+
+    _locationData = await location.getLocation();
+    return true;
+  }
+
+  @override
+  void initState() {
+    askPermission().then((result) {
+      setState(() {
+        _result = result;
+      });
+    });
+    super.initState();
+  }
+
   @override
   Widget build(BuildContext ctxt) {
-    return new Scaffold(
-      backgroundColor: Colors.red,
-      body:
-          Center(
-            child: Text.rich(TextSpan(children: <TextSpan>[
-              TextSpan(text: _locationData.longitude.toString()),
-              TextSpan(text: " / "),
-              TextSpan(text: _locationData.latitude.toString())
-            ]))
-          ),
-    );
+    if (_result == true) {
+      return new Scaffold(
+        backgroundColor: Colors.red,
+        body:
+            Center(
+              child: Text.rich(TextSpan(children: <TextSpan>[
+                TextSpan(text: _locationData.longitude.toString()),
+                TextSpan(text: " / "),
+                TextSpan(text: _locationData.latitude.toString())
+              ]))
+            ),
+      );
+    } else {
+      return new Scaffold(
+        backgroundColor: Colors.red,
+      );
+    }
   }
 }
 
