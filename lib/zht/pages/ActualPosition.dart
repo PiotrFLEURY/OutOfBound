@@ -14,14 +14,8 @@ class ActualPositionState extends State<ActualPosition>{
   LocationData _locationData;
 
   @override
-  void initState() {
+  void initState() async{
     super.initState();
-    requestPermission();
-
-  }
-
-  void requestPermission() async{
-    
     _serviceEnabled = await location.serviceEnabled();
     if (!_serviceEnabled) {
       _serviceEnabled = await location.requestService();
@@ -42,8 +36,9 @@ class ActualPositionState extends State<ActualPosition>{
     @override
     void setState (){
     }
-    
+
   }
+
   
     getLatandLng(){
       if (_locationData != null)   
@@ -58,12 +53,7 @@ class ActualPositionState extends State<ActualPosition>{
         home: new Scaffold(
         backgroundColor: Colors.blue,
         body: Center(
-       // child: Column(
-       //   mainAxisAlignment: MainAxisAlignment.center,
         child: getLatandLng(),
-            
-          //),
-       // ),
       ),
         ),
     );
