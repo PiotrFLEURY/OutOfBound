@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:location/location.dart';
+import 'package:provider/provider.dart';
 
 Location location = new Location();
 bool _serviceEnabled;
@@ -9,9 +10,35 @@ LocationData _locationData;
 class NveMainPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    return new MaterialApp(
-      home: MyStatefulWidget(),
+    return MultiProvider(providers: [
+      ChangeNotifierProvider(create: (_) => Position()),
+    ],
+    child: Consumer<Position>(
+      builder: (context, position, _) {
+        return new MaterialApp(
+          home: MyStatefulWidget(),
+        );
+      },
+    ),
     );
+  }
+}
+
+class Position with ChangeNotifier {
+  double _startingLongitude;
+  double _startingLatitude;
+
+  void setPosition(double longitude, double latitude) {
+    _startingLongitude = longitude;
+    _startingLatitude = latitude;
+  }
+
+  double getLongitude() {
+    return _startingLongitude;
+  }
+
+  double getLatitude() {
+    return _startingLatitude;
   }
 }
 
@@ -53,9 +80,14 @@ class BluePage extends StatelessWidget {
   Widget build(BuildContext ctxt) {
     return new Scaffold(
       backgroundColor: Colors.blue,
-      body: Center(child: new Text(
-          "Blue Page"
-      ))
+      body: Center(
+        child: 
+          Text.rich(TextSpan(children: <TextSpan>[
+            TextSpan(text: Provider.of<Position>(ctxt, listen: false).getLongitude().toString()),
+            TextSpan(text: " / "),
+            TextSpan(text: Provider.of<Position>(ctxt, listen: false).getLatitude().toString())
+          ])),
+        )
     );
   }
 }
@@ -104,13 +136,26 @@ class RedPage extends State<MyStatefulRedPage> {
       return new Scaffold(
         backgroundColor: Colors.red,
         body:
+        Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          crossAxisAlignment: CrossAxisAlignment.center,
+          children: <Widget>[
             Center(
-              child: Text.rich(TextSpan(children: <TextSpan>[
-                TextSpan(text: _locationData.longitude.toString()),
-                TextSpan(text: " / "),
-                TextSpan(text: _locationData.latitude.toString())
-              ]))
-            ),
+                child: Text.rich(TextSpan(children: <TextSpan>[
+                  TextSpan(text: _locationData.longitude.toString()),
+                  TextSpan(text: " / "),
+                  TextSpan(text: _locationData.latitude.toString())
+                ])),
+              ),
+            Center(
+              child: RaisedButton(
+                onPressed: () {
+                  Provider.of<Position>(context, listen: false).setPosition(_locationData.longitude, _locationData.latitude);
+                },
+                child: Text("Make as start"),
+              )
+            )
+        ],)
       );
     } else {
       return new Scaffold(
