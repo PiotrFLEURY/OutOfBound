@@ -38,7 +38,7 @@ class ActualPositionState extends State<ActualPosition>{
       }
     }
     
-     Provider.of<LocationProvider>(context).current = location.getLocation();
+     Provider.of<LocationProvider>(context).current = await location.getLocation();
   }
 
   getLatandLng(){

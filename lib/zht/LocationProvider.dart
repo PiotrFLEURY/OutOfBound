@@ -14,7 +14,7 @@ class LocationProvider with ChangeNotifier {
     notifyListeners();
   } 
 
-  set current(value) {
+  set current( LocationData value) {
     _currentLocation = value;
     notifyListeners();
   }
