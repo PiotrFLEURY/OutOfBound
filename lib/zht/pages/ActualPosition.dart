@@ -40,13 +40,14 @@ class ActualPositionState extends State<ActualPosition>{
     }
     
     _locationData = await location.getLocation();
-    
-
+     
   }
 
   getLatandLng(){
     if (_locationData != null)   
       return  Text("LATITUDE: ${_locationData.latitude}, LONGITUDE: ${_locationData.longitude}");
+    else
+      return Text("You don't have a start position !");
   }
 
  @override
@@ -55,17 +56,26 @@ class ActualPositionState extends State<ActualPosition>{
         builder: (context, _actual, _) {
             return Scaffold(
             backgroundColor: Colors.red,
+            
             body:Center(
-              child: new RaisedButton(
-                child: Text("Make as start"),
+
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+              children :[
+                getLatandLng(),
+                RaisedButton(
+                  child: Text("Make as start"),
                     onPressed: () {
                       _actual.current=_locationData;
                       _actual.starting = _actual.current;
                    }
                   ),
-            ),
+                 
+                 ]
+                )
+              ),   
             );
-        }
-            );
-}
-}
+         }
+    );
+  }
+}                      
