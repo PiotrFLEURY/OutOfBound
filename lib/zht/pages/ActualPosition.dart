@@ -41,6 +41,7 @@ class ActualPositionState extends State<ActualPosition>{
     
     _locationData = await location.getLocation();
      
+
   }
 
   getLatandLng(){
@@ -62,7 +63,10 @@ class ActualPositionState extends State<ActualPosition>{
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.spaceEvenly,
               children :[
-                getLatandLng(),
+                 if (_actual.current != null)   
+                   Text("LATITUDE: ${_actual.current.latitude}, LONGITUDE: ${_actual.current.longitude}"),
+                  if (_actual.current == null)   
+                   Text("You don't have a start position !"),
                 RaisedButton(
                   child: Text("Make as start"),
                     onPressed: () {
