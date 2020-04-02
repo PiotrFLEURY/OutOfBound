@@ -92,9 +92,11 @@ class Position with ChangeNotifier {
 
     Future<void> getDistance() async {
       _locationData = await location.getLocation();
-      _distance = await geo.distanceBetween(_locationData.latitude, _locationData.longitude, 
-                                            Provider.of<Position>(context, listen: false).latitude, 
-                                            Provider.of<Position>(context, listen: false).longitude);
+      if (Provider.of<Position>(context, listen: false).latitude != null && Provider.of<Position>(context, listen: false).longitude != null) {
+        _distance = await geo.distanceBetween(_locationData.latitude, _locationData.longitude, 
+                                              Provider.of<Position>(context, listen: false).latitude, 
+                                              Provider.of<Position>(context, listen: false).longitude);
+      }      
     }
   
     @override
@@ -109,30 +111,36 @@ class Position with ChangeNotifier {
 
     @override
     Widget build(BuildContext ctxt) {
-      return new Scaffold(
-        backgroundColor: Colors.blue,
-        body: 
-          Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            crossAxisAlignment: CrossAxisAlignment.center,
-            children: <Widget>[
-              Center(
-                child: 
-                  Text.rich(TextSpan(children: <TextSpan>[
-                    TextSpan(text: Provider.of<Position>(ctxt, listen: false).longitude.toString()),
-                    TextSpan(text: " / "),
-                    TextSpan(text: Provider.of<Position>(ctxt, listen: false).latitude.toString())
-                  ])),
-                ),
-              Center(
-                child: 
-                  Text.rich(TextSpan(children: <TextSpan>[
-                    TextSpan(text: "actually at "),
-                    TextSpan(text: _distance.toInt().toString()),
-                    TextSpan(text: " meters from this point")
-                  ])),
-                )
-            ]));
+      if (Provider.of<Position>(context, listen: false).latitude != null && Provider.of<Position>(context, listen: false).longitude != null) {
+        return new Scaffold(
+          backgroundColor: Colors.blue,
+          body: 
+            Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              crossAxisAlignment: CrossAxisAlignment.center,
+              children: <Widget>[
+                Center(
+                  child: 
+                    Text.rich(TextSpan(children: <TextSpan>[
+                      TextSpan(text: Provider.of<Position>(ctxt, listen: false).longitude.toString()),
+                      TextSpan(text: " / "),
+                      TextSpan(text: Provider.of<Position>(ctxt, listen: false).latitude.toString())
+                    ])),
+                  ),
+                Center(
+                  child: 
+                    Text.rich(TextSpan(children: <TextSpan>[
+                      TextSpan(text: "actually at "),
+                      TextSpan(text: _distance.toInt().toString()),
+                      TextSpan(text: " meters from this point")
+                    ])),
+                  )
+              ]));
+    } else {
+        return new Scaffold(
+          backgroundColor: Colors.blue,
+        );
+      }
     }
   }
   
@@ -164,9 +172,11 @@ class Position with ChangeNotifier {
       }
   
       _locationData = await location.getLocation();
-      _distance = await geo.distanceBetween(_locationData.latitude, _locationData.longitude, 
-                                            Provider.of<Position>(context, listen: false).latitude, 
-                                            Provider.of<Position>(context, listen: false).longitude);
+      if (Provider.of<Position>(context, listen: false).latitude != null && Provider.of<Position>(context, listen: false).longitude != null) {
+        _distance = await geo.distanceBetween(_locationData.latitude, _locationData.longitude, 
+                                              Provider.of<Position>(context, listen: false).latitude, 
+                                              Provider.of<Position>(context, listen: false).longitude);
+      }
     }
   
     @override
