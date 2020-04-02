@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:location/location.dart';
 import 'package:provider/provider.dart';
+import 'package:geolocator/geolocator.dart';
 
 Location location = new Location();
+Geolocator geo = new Geolocator();
 bool _serviceEnabled;
 PermissionStatus _permissionGranted;
 LocationData _locationData;
@@ -54,7 +56,7 @@ class Position with ChangeNotifier {
   
   class FirstScreen extends State<MyStatefulWidget> {
     int _selectedIndex = 0;
-    final List<Widget> _children = [BluePage(), MyStatefulRedPage(), GreenPage()];
+    final List<Widget> _children = [MyStatefulBluePage(), MyStatefulRedPage(), GreenPage()];
   
     void _onItemTapped(int index) {
       setState(() {
@@ -77,21 +79,60 @@ class Position with ChangeNotifier {
       );
     }
   }
+
+  class MyStatefulBluePage extends StatefulWidget {
+    MyStatefulBluePage({Key key}) : super(key: key);
   
-  class BluePage extends StatelessWidget {
+    @override
+    BluePage createState() => BluePage();
+  }
+
+  class BluePage extends State<MyStatefulBluePage> {
+    double _distance = 0;
+
+    Future<void> getDistance() async {
+      _locationData = await location.getLocation();
+      _distance = await geo.distanceBetween(_locationData.latitude, _locationData.longitude, 
+                                            Provider.of<Position>(context, listen: false).latitude, 
+                                            Provider.of<Position>(context, listen: false).longitude);
+    }
+  
+    @override
+    void initState() {
+      getDistance().then((result) {
+        setState(() {
+          
+        });
+      });
+      super.initState();
+    }
+
     @override
     Widget build(BuildContext ctxt) {
       return new Scaffold(
         backgroundColor: Colors.blue,
-        body: Center(
-          child: 
-            Text.rich(TextSpan(children: <TextSpan>[
-              TextSpan(text: Provider.of<Position>(ctxt, listen: false).longitude.toString()),
-              TextSpan(text: " / "),
-              TextSpan(text: Provider.of<Position>(ctxt, listen: false).latitude.toString())
-            ])),
-          )
-      );
+        body: 
+          Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            crossAxisAlignment: CrossAxisAlignment.center,
+            children: <Widget>[
+              Center(
+                child: 
+                  Text.rich(TextSpan(children: <TextSpan>[
+                    TextSpan(text: Provider.of<Position>(ctxt, listen: false).longitude.toString()),
+                    TextSpan(text: " / "),
+                    TextSpan(text: Provider.of<Position>(ctxt, listen: false).latitude.toString())
+                  ])),
+                ),
+              Center(
+                child: 
+                  Text.rich(TextSpan(children: <TextSpan>[
+                    TextSpan(text: "actually at "),
+                    TextSpan(text: _distance.toInt().toString()),
+                    TextSpan(text: " meters from this point")
+                  ])),
+                )
+            ]));
     }
   }
   
@@ -103,6 +144,8 @@ class Position with ChangeNotifier {
   }
   
   class RedPage extends State<MyStatefulRedPage> {
+    double _distance = 0;
+
     Future<void> askPermission() async {
       _serviceEnabled = await location.serviceEnabled();
       if (!_serviceEnabled) {
@@ -121,6 +164,9 @@ class Position with ChangeNotifier {
       }
   
       _locationData = await location.getLocation();
+      _distance = await geo.distanceBetween(_locationData.latitude, _locationData.longitude, 
+                                            Provider.of<Position>(context, listen: false).latitude, 
+                                            Provider.of<Position>(context, listen: false).longitude);
     }
   
     @override
@@ -157,8 +203,15 @@ class Position with ChangeNotifier {
                     Provider.of<Position>(context, listen: false).latitude = _locationData.latitude;
                 },
                 child: Text("Make as start"),
-              )
-            )
+                )
+              ),
+              Center(
+                  child: Text.rich(TextSpan(children: <TextSpan>[
+                    TextSpan(text: "actually at "),
+                    TextSpan(text: _distance.toInt().toString()),
+                    TextSpan(text: " meters from the starting point")
+                  ])),
+                ),
         ],)
       );
     } else {
