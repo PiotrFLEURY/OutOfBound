@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:location/location.dart';
+import 'package:OutOfBounds/zht/LocationProvider.dart';
+import 'package:provider/provider.dart';
 
 class ActualPosition extends StatefulWidget {
   @override
@@ -38,8 +40,7 @@ class ActualPositionState extends State<ActualPosition>{
     }
     
     _locationData = await location.getLocation();
-    setState(() {    
-    }); 
+    
 
   }
 
@@ -48,17 +49,23 @@ class ActualPositionState extends State<ActualPosition>{
       return  Text("LATITUDE: ${_locationData.latitude}, LONGITUDE: ${_locationData.longitude}");
   }
 
-  @override
+ @override
   Widget build(BuildContext context){
-    return new MaterialApp(
-      home: new Scaffold(
-        backgroundColor: Colors.red,
-        body: Center(
-          child: getLatandLng(),
-        ),
-      ),
-    );
-  }
-
-  
+    return Consumer<LocationProvider>(
+        builder: (context, _actual, _) {
+            return Scaffold(
+            backgroundColor: Colors.red,
+            body:Center(
+              child: new RaisedButton(
+                child: Text("Make as start"),
+                    onPressed: () {
+                      _actual.current=_locationData;
+                      _actual.starting = _actual.current;
+                   }
+                  ),
+            ),
+            );
+        }
+            );
+}
 }

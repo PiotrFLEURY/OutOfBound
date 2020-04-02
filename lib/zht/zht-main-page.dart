@@ -1,7 +1,10 @@
+import 'package:OutOfBounds/zht/LocationProvider.dart';
+import 'package:OutOfBounds/zht/user/user-page.dart';
 import 'package:flutter/material.dart';
 import 'package:OutOfBounds/zht/pages/StartPositionPage.dart';
 import 'package:OutOfBounds/zht/pages/ActualPosition.dart';
 import 'package:OutOfBounds/zht/pages/SettingsPage.dart';
+import 'package:provider/provider.dart';
 class ZhtMainPage extends StatefulWidget {
   @override
   State<StatefulWidget> createState() {
@@ -18,15 +21,17 @@ class MyAppState extends State<ZhtMainPage> {
 
   @override
   Widget build(BuildContext context) {
-    return new MaterialApp(
-      title: 'OutOfBound Application',
-      home: Scaffold(
-        appBar: AppBar(
-          title: Text('OutOfBound Application'),    
-        ),         
-         body: itemsChoice[whoSelected],
+
+    return MultiProvider(
+       providers: [
+        ChangeNotifierProvider(
+          create: (context) => LocationProvider(),
+        ),
+      ],   
+          child: new Scaffold(
+          body: itemsChoice[whoSelected],
+
           bottomNavigationBar: BottomNavigationBar(  
-            
             currentIndex: whoSelected,
             onTap:(int index){
                 setState((){
@@ -47,8 +52,12 @@ class MyAppState extends State<ZhtMainPage> {
                 title: Text('Setting'),
               ),
             ],
-          ) ,
+          ) 
+      
       ),
-    );
+      );
+      
+        
+    
   }
 }
