@@ -13,7 +13,6 @@ class ActualPositionState extends State<ActualPosition>{
   Location location = new Location();
   bool _serviceEnabled;
   PermissionStatus _permissionGranted;
-  LocationData _locationData;
 
   @override
   void initState(){
@@ -39,13 +38,12 @@ class ActualPositionState extends State<ActualPosition>{
       }
     }
     
-    _locationData = await location.getLocation();
-     Provider.of<LocationProvider>(context).current = _locationData;
+     Provider.of<LocationProvider>(context).current = location.getLocation();
   }
 
   getLatandLng(){
-    if (_locationData != null)   
-      return  Text("LATITUDE: ${_locationData.latitude}, LONGITUDE: ${_locationData.longitude}");
+    if (Provider.of<LocationProvider>(context).current != null)   
+      return  Text("LATITUDE: ${Provider.of<LocationProvider>(context).current.latitude}, LONGITUDE: ${Provider.of<LocationProvider>(context).current.longitude}");
     else
       return Text("You don't have a start position !");
   }
@@ -56,12 +54,9 @@ class ActualPositionState extends State<ActualPosition>{
      
     return Consumer<LocationProvider>(
         builder: (context, _actual, _) {
-          _actual.current=_locationData;
             return Scaffold(
-            backgroundColor: Colors.red,
-            
+            backgroundColor: Colors.red,          
             body:Center(
-
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.spaceEvenly,
               children :[
@@ -69,7 +64,6 @@ class ActualPositionState extends State<ActualPosition>{
                 RaisedButton(
                   child: Text("Make as start"),
                     onPressed: () {
-                      _actual.current=_locationData;
                       _actual.starting = _actual.current;
                    }
                   ),
