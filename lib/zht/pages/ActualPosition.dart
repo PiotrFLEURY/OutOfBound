@@ -8,20 +8,18 @@ class ActualPosition extends StatefulWidget {
   ActualPositionState createState() => ActualPositionState();
 }
 
-class ActualPositionState extends State<ActualPosition>{
-
+class ActualPositionState extends State<ActualPosition> {
   Location location = new Location();
   bool _serviceEnabled;
   PermissionStatus _permissionGranted;
 
   @override
-  void initState(){
+  void initState() {
     super.initState();
-    initLocation(); 
+    initLocation();
   }
 
   void initLocation() async {
-
     _serviceEnabled = await location.serviceEnabled();
     if (!_serviceEnabled) {
       _serviceEnabled = await location.requestService();
@@ -29,7 +27,7 @@ class ActualPositionState extends State<ActualPosition>{
         return;
       }
     }
-    
+
     _permissionGranted = await location.hasPermission();
     if (_permissionGranted == PermissionStatus.denied) {
       _permissionGranted = await location.requestPermission();
@@ -37,42 +35,36 @@ class ActualPositionState extends State<ActualPosition>{
         return;
       }
     }
-    
-     Provider.of<LocationProvider>(context).current = await location.getLocation();
+
+    Provider.of<LocationProvider>(context).current =
+        await location.getLocation();
   }
 
-  getLatandLng(){
-    if (Provider.of<LocationProvider>(context).current != null)   
-      return  Text("LATITUDE: ${Provider.of<LocationProvider>(context).current.latitude}, LONGITUDE: ${Provider.of<LocationProvider>(context).current.longitude}");
+  getLatandLng() {
+    if (Provider.of<LocationProvider>(context).current != null)
+      return Text(
+          "LATITUDE: ${Provider.of<LocationProvider>(context).current.latitude}, LONGITUDE: ${Provider.of<LocationProvider>(context).current.longitude}");
     else
       return Text("You don't have a start position !");
   }
 
- @override
-  Widget build(BuildContext context){
-
-     
-    return Consumer<LocationProvider>(
-        builder: (context, _actual, _) {
-            return Scaffold(
-            backgroundColor: Colors.red,          
-            body:Center(
-              child: Column(
+  @override
+  Widget build(BuildContext context) {
+    return Consumer<LocationProvider>(builder: (context, _actual, _) {
+      return Scaffold(
+        backgroundColor: Colors.red,
+        body: Center(
+            child: Column(
                 mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-              children :[
-                getLatandLng(),               
-                RaisedButton(
+                children: [
+              getLatandLng(),
+              RaisedButton(
                   child: Text("Make as start"),
-                    onPressed: () {
-                      _actual.starting = _actual.current;
-                   }
-                  ),
-                 
-                 ]
-                )
-              ),   
-            );
-         }
-    );
+                  onPressed: () {
+                    _actual.starting = _actual.current;
+                  }),
+            ])),
+      );
+    });
   }
-}                      
+}
