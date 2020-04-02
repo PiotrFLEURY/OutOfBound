@@ -40,8 +40,7 @@ class ActualPositionState extends State<ActualPosition>{
     }
     
     _locationData = await location.getLocation();
-     
-
+     Provider.of<LocationProvider>(context).current = _locationData;
   }
 
   getLatandLng(){
@@ -53,8 +52,11 @@ class ActualPositionState extends State<ActualPosition>{
 
  @override
   Widget build(BuildContext context){
+
+     
     return Consumer<LocationProvider>(
         builder: (context, _actual, _) {
+          _actual.current=_locationData;
             return Scaffold(
             backgroundColor: Colors.red,
             
@@ -63,10 +65,7 @@ class ActualPositionState extends State<ActualPosition>{
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.spaceEvenly,
               children :[
-                 if (_actual.current != null)   
-                   Text("LATITUDE: ${_actual.current.latitude}, LONGITUDE: ${_actual.current.longitude}"),
-                  if (_actual.current == null)   
-                   Text("You don't have a start position !"),
+                getLatandLng(),               
                 RaisedButton(
                   child: Text("Make as start"),
                     onPressed: () {
