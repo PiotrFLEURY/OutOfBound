@@ -21,9 +21,9 @@ This page should show a welcome message in the center.
 
 Add a bottom navigation to your main page.
 The bottom bar should contain 3 items :
-    - Start position (left)
-    - Actual position (center)
-    - Settings (right)
+- Start position (left)
+- Actual position (center)
+- Settings (right)
 
 Each item should be represented by an Icon and a text
 
@@ -33,34 +33,34 @@ Add some life to you app !
 When you click on each item of the bottom bar a new sub-page should appear INSIDE your main page.
 For the moment, each sub-page should just contain a Color.
 Let's choose :
-    - Starting position sub-page should be blue
-    - Actual position should be red
-    - Settings sub-page should be green
+- Starting position sub-page should be blue
+- Actual position should be red
+- Settings sub-page should be green
 
 ## Feature 4 - Add a plugin
 
 To know where the user is, we have to use a flutter plugin !
 Visit https://pub.dev/packages/location and follow the readme :
-    - add this plugin to your pubspec.yaml
-    - do the setup for each platform (Android & IOS)
+- add this plugin to your pubspec.yaml
+- do the setup for each platform (Android & IOS)
 
-## Feature 5 - Actual position
+## Feature 5 - Actual location
 
 Now you are able to locate the app's user.
-Change the code of the actual position sub-page to make it implement the newly added plugin "location".
+Change the code of the actual location sub-page to make it implement the newly added plugin "location".
 To make it you will have to follow the readme of the plugin.
 
 At the end of this exercice the app should :
-    - ask the permission to use the location of the user
-    - show the actual position of the user in the center sub-page
+- ask the permission to use the location of the user
+- show the actual location of the user in the center sub-page
 
 Nb: For the moment, just show the longitude and latitude.
 
-## Feature 6 - Starting position
+## Feature 6 - Starting location
 
-On the Actual position sub-page, add a button named "Make as start" that save the current position to make it the starting position.
+On the Actual location sub-page, add a button named "Make as start" that save the current location to make it the starting location.
 
-At the end of this exercice the first sub-page should show the last saved position.
+At the end of this exercice the first sub-page should show the last saved location.
 
 ## Feature 7 - Distance
 
@@ -70,8 +70,8 @@ As before, visit https://pub.dev/packages/geolocator and folllow the readme to a
 Now, add the distance feature to your app.
 To make it, use the `distanceBetween` method of the Geolocator plugin.
 
-Add a new text in the Starting position sub-page that contains `actually at XXX meters from this point`
-Add a new text in the Actual position sub-page that contains `actually at XXX meters from the starting point`
+Add a new text in the Starting location sub-page that contains `actually at XXX meters from this point`
+Add a new text in the Actual location sub-page that contains `actually at XXX meters from the starting point`
 
 ## Feature 8 - Boundary setting
 
@@ -111,3 +111,18 @@ Open a second notification when the user goes out of bounds.
 The text should be `Alert ! You are XXX meter too far from your starting point` and the title should be the name of the app.
 This notification should be cancellable
 This notification should be updated with the text `Ok, all is all right now.` when the user comes back inside the bounds.
+
+## Feature 12 - Custom navbar
+
+The default BottomNavigationBar is boring. Let's create an animated custom navbar !
+
+Try to replace the default BottomNavigationBar by a custom one that look like the bellow gif:
+
+![](CustomAnimatedNavBar.gif)
+
+For this feature you will need :
+- Stack
+- Align
+- AnimatedContainer
+
+No AnimationController is needed for this feature.
