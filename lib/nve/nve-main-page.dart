@@ -266,6 +266,13 @@ class GreenPage extends State<MyStatefulGreenPage> {
         child: _textField);
   }
 
+  void _setAlerts(bool value) {
+    setState(() {
+      settings.enableAlerts = value;
+      debugPrint(settings.enableAlerts.toString());
+    }); 
+  }
+
   @override
   Widget build(BuildContext ctxt) {
       return new Scaffold(
@@ -280,6 +287,15 @@ class GreenPage extends State<MyStatefulGreenPage> {
                 Center(
                   child: _setBoundary(),
                 ),
+                Center (
+                  child: Text("Enable alerts :"),
+                ),
+                Center (
+                  child: Checkbox(
+                    value: settings.enableAlerts,
+                    onChanged: (value) => _setAlerts(value),
+                  ),
+                )
               ]
           )
       );
