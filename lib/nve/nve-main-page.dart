@@ -3,8 +3,11 @@ import 'package:flutter/services.dart';
 import 'package:location/location.dart';
 import 'package:provider/provider.dart';
 import 'package:geolocator/geolocator.dart';
+import 'position-service.dart';
+import 'settings-service.dart';
 
 Location location = new Location();
+SettingsService settings = new SettingsService();
 Geolocator geo = new Geolocator();
 bool _serviceEnabled;
 PermissionStatus _permissionGranted;
@@ -15,9 +18,9 @@ class NveMainPage extends StatelessWidget {
   Widget build(BuildContext context) {
     return MultiProvider(
       providers: [
-        ChangeNotifierProvider(create: (_) => Position()),
+        ChangeNotifierProvider(create: (_) => PositionService()),
       ],
-      child: Consumer<Position>(
+      child: Consumer<PositionService>(
         builder: (context, position, _) {
           return new MaterialApp(
             home: MyStatefulWidget(),
@@ -25,36 +28,6 @@ class NveMainPage extends StatelessWidget {
         },
       ),
     );
-  }
-}
-
-class Position with ChangeNotifier {
-  int _boundary;
-  double _startingLongitude;
-  double _startingLatitude;
-
-  set longitude(double longitude) {
-    _startingLongitude = longitude;
-  }
-
-  set latitude(double latitude) {
-    _startingLatitude = latitude;
-  }
-
-  set boundary(int boundary) {
-    _boundary = boundary;
-  }
-
-  double get longitude {
-    return _startingLongitude;
-  }
-
-  double get latitude {
-    return _startingLatitude;
-  }
-
-  int get boundary {
-    return _boundary;
   }
 }
 
@@ -110,13 +83,13 @@ class BluePage extends State<MyStatefulBluePage> {
 
   Future<void> getDistance() async {
     _locationData = await location.getLocation();
-    if (Provider.of<Position>(context, listen: false).latitude != null &&
-        Provider.of<Position>(context, listen: false).longitude != null) {
+    if (Provider.of<PositionService>(context, listen: false).latitude != null &&
+        Provider.of<PositionService>(context, listen: false).longitude != null) {
       _distance = await geo.distanceBetween(
           _locationData.latitude,
           _locationData.longitude,
-          Provider.of<Position>(context, listen: false).latitude,
-          Provider.of<Position>(context, listen: false).longitude);
+          Provider.of<PositionService>(context, listen: false).latitude,
+          Provider.of<PositionService>(context, listen: false).longitude);
     }
   }
 
@@ -130,8 +103,8 @@ class BluePage extends State<MyStatefulBluePage> {
 
   @override
   Widget build(BuildContext ctxt) {
-    if (Provider.of<Position>(context, listen: false).latitude != null &&
-        Provider.of<Position>(context, listen: false).longitude != null) {
+    if (Provider.of<PositionService>(context, listen: false).latitude != null &&
+        Provider.of<PositionService>(context, listen: false).longitude != null) {
       return new Scaffold(
           backgroundColor: Colors.blue,
           body: Column(
@@ -141,12 +114,12 @@ class BluePage extends State<MyStatefulBluePage> {
                 Center(
                   child: Text.rich(TextSpan(children: <TextSpan>[
                     TextSpan(
-                        text: Provider.of<Position>(ctxt, listen: false)
+                        text: Provider.of<PositionService>(ctxt, listen: false)
                             .longitude
                             .toString()),
                     TextSpan(text: " / "),
                     TextSpan(
-                        text: Provider.of<Position>(ctxt, listen: false)
+                        text: Provider.of<PositionService>(ctxt, listen: false)
                             .latitude
                             .toString())
                   ])),
@@ -195,13 +168,13 @@ class RedPage extends State<MyStatefulRedPage> {
     }
 
     _locationData = await location.getLocation();
-    if (Provider.of<Position>(context, listen: false).latitude != null &&
-        Provider.of<Position>(context, listen: false).longitude != null) {
+    if (Provider.of<PositionService>(context, listen: false).latitude != null &&
+        Provider.of<PositionService>(context, listen: false).longitude != null) {
       _distance = await geo.distanceBetween(
           _locationData.latitude,
           _locationData.longitude,
-          Provider.of<Position>(context, listen: false).latitude,
-          Provider.of<Position>(context, listen: false).longitude);
+          Provider.of<PositionService>(context, listen: false).latitude,
+          Provider.of<PositionService>(context, listen: false).longitude);
     }
   }
 
@@ -232,9 +205,9 @@ class RedPage extends State<MyStatefulRedPage> {
               Center(
                   child: RaisedButton(
                 onPressed: () {
-                  Provider.of<Position>(context, listen: false).longitude =
+                  Provider.of<PositionService>(context, listen: false).longitude =
                       _locationData.longitude;
-                  Provider.of<Position>(context, listen: false).latitude =
+                  Provider.of<PositionService>(context, listen: false).latitude =
                       _locationData.latitude;
                 },
                 child: Text("Make as start"),
@@ -274,8 +247,8 @@ class GreenPage extends State<MyStatefulGreenPage> {
 
   void _handleSubmitted(String finalinput) {
     setState(() {
-      Provider.of<Position>(context, listen: false).boundary = int.parse(finalinput);
-      debugPrint(Provider.of<Position>(context, listen: false).boundary.toString());
+      settings.boundary = int.parse(finalinput);
+      debugPrint(settings.boundary.toString());
     });
   }
 
