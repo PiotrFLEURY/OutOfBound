@@ -126,3 +126,23 @@ For this feature you will need :
 - AnimatedContainer
 
 No AnimationController is needed for this feature.
+
+## Feature 13 - Custom UI
+
+Let's make our app more attractive.
+
+Use the assets in assets/images to implement the following UI:
+
+![](CustomUI.gif)
+
+For this implementation you will need :
+
+- ClipPath, CustomClipper for the header
+- Positionned and Material for the header indicator
+- Material for the cards
+
+Colors :
+
+- orange
+- black
+- grey
