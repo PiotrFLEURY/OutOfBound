@@ -146,3 +146,14 @@ Colors :
 - orange
 - black
 - grey
+
+## Feature 14 - Tests !
+
+Read the official flutter documentation to learn how to make tests.
+https://flutter.dev/docs/testing
+
+Make 3 tests :
+
+- 1 unit test
+- 1 widget test - to check out custom navigation bar
+- 1 integration test - to check the app behavior
