@@ -1,21 +1,56 @@
 import 'package:OutOfBounds/zht/LocationProvider.dart';
 import 'package:flutter/material.dart';
+import 'package:geolocator/geolocator.dart';
 import 'package:location/location.dart';
 import 'package:provider/provider.dart';
-import 'package:OutOfBounds/zht/pages/ActualPosition.dart';
 
-class StartPositionPage extends StatelessWidget{
+
+class StartPosition extends StatefulWidget {
+  @override
+  StartPositionState createState() => StartPositionState();
+}
+
+class StartPositionState extends State<StartPosition>{
+  
+  Geolocator geolocator = new Geolocator() ;
+  double distanceInMeters;
+
+  Future<double> distanceBetween2(LocationData current, LocationData start) async { 
+  
+   if(current.latitude != null && start.latitude != null && start.longitude != null && current.longitude != null)
+   {
+      return distanceInMeters = await geolocator.distanceBetween(current.latitude,current.longitude,start.latitude,start.longitude);
+   }
+   return distanceInMeters;
+  }
+
+void updateDistance(LocationProvider provider) async
+{ 
+  var distance =  await distanceBetween2(provider.current,provider.starting);
+  setState(() {
+    distanceInMeters = distance;
+  });}
 
 
   @override
   Widget build(BuildContext context){
+
     return Consumer<LocationProvider>(
-        builder: (context, _start, _) {
-          LocationData start = _start.starting;
-          if (start != null) {
+        builder: (context, _provider, _) {
+          
+
+          if ( _provider.starting != null) {
+            updateDistance(_provider);
             return Scaffold(
                backgroundColor: Colors.blue,
-             body: Center(child:  Text("LATITUDE: ${start.latitude}, LONGITUDE: ${start.longitude}"))
+             body: Center(
+               child: Column( 
+                 mainAxisAlignment: MainAxisAlignment.center,
+                    children: [ 
+                      Text("LATITUDE: ${ _provider.starting.latitude}, LONGITUDE: ${ _provider.starting.longitude}"),
+                      Text("Actually at ${distanceInMeters} meters from this point.")
+                      ]))
+
             );
           }
           else {

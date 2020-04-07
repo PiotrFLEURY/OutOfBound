@@ -14,7 +14,7 @@ class ZhtMainPage extends StatefulWidget {
 class MyAppState extends State<ZhtMainPage> {
   int whoSelected = 0;
   final itemsChoice = [
-    StartPositionPage(),
+    StartPosition(),
     ActualPosition(),
     SettingsPage(),
   ];

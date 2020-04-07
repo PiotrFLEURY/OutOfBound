@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:location/location.dart';
+import 'package:geolocator/geolocator.dart';
 import 'package:OutOfBounds/zht/LocationProvider.dart';
 import 'package:provider/provider.dart';
 
@@ -12,6 +13,9 @@ class ActualPositionState extends State<ActualPosition> {
   Location location = new Location();
   bool _serviceEnabled;
   PermissionStatus _permissionGranted;
+
+  Geolocator geolocator = new Geolocator();
+  double distanceInMeters;
 
   @override
   void initState() {
@@ -40,6 +44,23 @@ class ActualPositionState extends State<ActualPosition> {
         await location.getLocation();
   }
 
+  Future<double> distanceBetween2(
+      LocationData current, LocationData start) async {
+    distanceInMeters = await geolocator.distanceBetween(
+        current.latitude, current.longitude, start.latitude, start.longitude);
+    return distanceInMeters;
+  }
+
+  void updateDistance(LocationProvider provider) async {
+    var distance;
+    if (provider.current != null && provider.starting != null) {
+      distance = await distanceBetween2(provider.current, provider.starting);
+      setState(() {
+        distanceInMeters = distance;
+      });
+    }
+  }
+
   getLatandLng() {
     if (Provider.of<LocationProvider>(context).current != null)
       return Text(
@@ -50,7 +71,8 @@ class ActualPositionState extends State<ActualPosition> {
 
   @override
   Widget build(BuildContext context) {
-    return Consumer<LocationProvider>(builder: (context, _actual, _) {
+    return Consumer<LocationProvider>(builder: (context, _provider, _) {
+      updateDistance(_provider);
       return Scaffold(
         backgroundColor: Colors.red,
         body: Center(
@@ -61,8 +83,10 @@ class ActualPositionState extends State<ActualPosition> {
               RaisedButton(
                   child: Text("Make as start"),
                   onPressed: () {
-                    _actual.starting = _actual.current;
+                    _provider.starting = _provider.current;
                   }),
+              Text(
+                  "Actually at ${distanceInMeters} meters from the starting point.")
             ])),
       );
     });
