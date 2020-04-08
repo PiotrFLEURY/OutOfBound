@@ -1,4 +1,4 @@
-import 'package:OutOfBounds/zht/LocationProvider.dart';
+import 'package:OutOfBounds/zht/SettingProvider.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -19,7 +19,7 @@ class _SettingsPageState extends State<SettingsPage> {
   Widget build(BuildContext context){
 
 
-  return Consumer<LocationProvider>(
+  return Consumer<SettingProvider>(
         builder: (context, _provider, _) {
                       return Scaffold(
                backgroundColor: Colors.green,
