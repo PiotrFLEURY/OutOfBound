@@ -1,13 +1,13 @@
 import 'package:flutter/material.dart';
 
 class SettingProvider with ChangeNotifier {
-  String  _value;
+  String  _boundary;
 
-  set meters(String value){
-  _value = value;
+  set boundary(String value){
+  _boundary = value;
   notifyListeners();
 }
 
-  get meters => _value;
+  get boundary => _boundary;
 
 }

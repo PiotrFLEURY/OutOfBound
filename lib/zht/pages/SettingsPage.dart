@@ -39,8 +39,8 @@ class _SettingsPageState extends State<SettingsPage> {
                     controller: value,
                     onSubmitted: (String value){
                       setState((){
-                      _provider.meters = value;
-                      print(_provider.meters);
+                      _provider.boundary = value;
+                      print(_provider.boundary);
                     });               
                     },
                 textInputAction: TextInputAction.done
