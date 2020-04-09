@@ -57,14 +57,23 @@ class FirstScreen extends State<MyStatefulWidget> {
     }
   }
 
+  @override
+  void initState() {
+      location.onLocationChanged.listen((_locationData) {
+        setState(() {
+          if (settings.enableAlerts == true && settings.boundary != null && 
+              Provider.of<PositionService>(context, listen: false).latitude != null &&
+              Provider.of<PositionService>(context, listen: false).longitude != null) {
+            isOutOfBounds();
+          }
+        });
+      });
+    super.initState();
+  }
+
   void _onItemTapped(int index) {
     setState(() {
       _selectedIndex = index;
-      if (settings.enableAlerts == true && settings.boundary != null && 
-          Provider.of<PositionService>(context, listen: false).latitude != null &&
-          Provider.of<PositionService>(context, listen: false).longitude != null) {
-        isOutOfBounds();
-      }
     });
   }
 
