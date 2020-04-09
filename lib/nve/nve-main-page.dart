@@ -46,9 +46,25 @@ class FirstScreen extends State<MyStatefulWidget> {
     MyStatefulGreenPage()
   ];
 
+  Future<void> isOutOfBounds() async {
+    double distance = await geo.distanceBetween(
+        _locationData.latitude,
+        _locationData.longitude,
+        Provider.of<PositionService>(context, listen: false).latitude,
+        Provider.of<PositionService>(context, listen: false).longitude);
+    if (distance > settings.boundary) {
+      debugPrint("The user goes out of bounds");
+    }
+  }
+
   void _onItemTapped(int index) {
     setState(() {
       _selectedIndex = index;
+      if (settings.enableAlerts == true && settings.boundary != null && 
+          Provider.of<PositionService>(context, listen: false).latitude != null &&
+          Provider.of<PositionService>(context, listen: false).longitude != null) {
+        isOutOfBounds();
+      }
     });
   }
 
@@ -84,7 +100,8 @@ class BluePage extends State<MyStatefulBluePage> {
   Future<void> getDistance() async {
     _locationData = await location.getLocation();
     if (Provider.of<PositionService>(context, listen: false).latitude != null &&
-        Provider.of<PositionService>(context, listen: false).longitude != null) {
+        Provider.of<PositionService>(context, listen: false).longitude !=
+            null) {
       _distance = await geo.distanceBetween(
           _locationData.latitude,
           _locationData.longitude,
@@ -104,7 +121,8 @@ class BluePage extends State<MyStatefulBluePage> {
   @override
   Widget build(BuildContext ctxt) {
     if (Provider.of<PositionService>(context, listen: false).latitude != null &&
-        Provider.of<PositionService>(context, listen: false).longitude != null) {
+        Provider.of<PositionService>(context, listen: false).longitude !=
+            null) {
       return new Scaffold(
           backgroundColor: Colors.blue,
           body: Column(
@@ -169,7 +187,8 @@ class RedPage extends State<MyStatefulRedPage> {
 
     _locationData = await location.getLocation();
     if (Provider.of<PositionService>(context, listen: false).latitude != null &&
-        Provider.of<PositionService>(context, listen: false).longitude != null) {
+        Provider.of<PositionService>(context, listen: false).longitude !=
+            null) {
       _distance = await geo.distanceBetween(
           _locationData.latitude,
           _locationData.longitude,
@@ -205,10 +224,10 @@ class RedPage extends State<MyStatefulRedPage> {
               Center(
                   child: RaisedButton(
                 onPressed: () {
-                  Provider.of<PositionService>(context, listen: false).longitude =
-                      _locationData.longitude;
-                  Provider.of<PositionService>(context, listen: false).latitude =
-                      _locationData.latitude;
+                  Provider.of<PositionService>(context, listen: false)
+                      .longitude = _locationData.longitude;
+                  Provider.of<PositionService>(context, listen: false)
+                      .latitude = _locationData.latitude;
                 },
                 child: Text("Make as start"),
               )),
@@ -261,43 +280,39 @@ class GreenPage extends State<MyStatefulGreenPage> {
 
     FocusScope.of(context).requestFocus(_textNode);
 
-    return new RawKeyboardListener(
-        focusNode: _textNode,
-        child: _textField);
+    return new RawKeyboardListener(focusNode: _textNode, child: _textField);
   }
 
   void _setAlerts(bool value) {
     setState(() {
       settings.enableAlerts = value;
       debugPrint(settings.enableAlerts.toString());
-    }); 
+    });
   }
 
   @override
   Widget build(BuildContext ctxt) {
-      return new Scaffold(
-          backgroundColor: Colors.green,
-          body: Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              crossAxisAlignment: CrossAxisAlignment.center,
-              children: <Widget>[
-                Center(
-                  child: Text("Boundary :"),
+    return new Scaffold(
+        backgroundColor: Colors.green,
+        body: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            crossAxisAlignment: CrossAxisAlignment.center,
+            children: <Widget>[
+              Center(
+                child: Text("Boundary :"),
+              ),
+              Center(
+                child: _setBoundary(),
+              ),
+              Center(
+                child: Text("Enable alerts :"),
+              ),
+              Center(
+                child: Checkbox(
+                  value: settings.enableAlerts,
+                  onChanged: (value) => _setAlerts(value),
                 ),
-                Center(
-                  child: _setBoundary(),
-                ),
-                Center (
-                  child: Text("Enable alerts :"),
-                ),
-                Center (
-                  child: Checkbox(
-                    value: settings.enableAlerts,
-                    onChanged: (value) => _setAlerts(value),
-                  ),
-                )
-              ]
-          )
-      );
+              )
+            ]));
   }
 }
