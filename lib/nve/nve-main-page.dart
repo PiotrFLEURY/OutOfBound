@@ -1,3 +1,5 @@
+import 'package:OutOfBounds/nve/notification-service.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:location/location.dart';
@@ -5,6 +7,7 @@ import 'package:provider/provider.dart';
 import 'package:geolocator/geolocator.dart';
 import 'position-service.dart';
 import 'settings-service.dart';
+import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 
 Location location = new Location();
 SettingsService settings = new SettingsService();
@@ -12,6 +15,8 @@ Geolocator geo = new Geolocator();
 bool _serviceEnabled;
 PermissionStatus _permissionGranted;
 LocationData _locationData;
+FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin = FlutterLocalNotificationsPlugin();
+NotificationService notificationService = new NotificationService();
 
 class NveMainPage extends StatelessWidget {
   @override
@@ -40,6 +45,7 @@ class MyStatefulWidget extends StatefulWidget {
 
 class FirstScreen extends State<MyStatefulWidget> {
   int _selectedIndex = 0;
+  bool isUserOutOfBounds = false;
   final List<Widget> _children = [
     MyStatefulBluePage(),
     MyStatefulRedPage(),
@@ -54,21 +60,49 @@ class FirstScreen extends State<MyStatefulWidget> {
         Provider.of<PositionService>(context, listen: false).longitude);
     if (distance > settings.boundary) {
       debugPrint("The user goes out of bounds");
+      notificationService.showOutOfBoundsNotification(distance.toString());
+      isUserOutOfBounds = true;
+    } else if (isUserOutOfBounds == true && distance <= settings.boundary) {
+      notificationService.showBackInBoundsNotification();
+      isUserOutOfBounds = false;
     }
   }
 
   @override
   void initState() {
-      location.onLocationChanged.listen((_locationData) {
-        setState(() {
-          if (settings.enableAlerts == true && settings.boundary != null && 
-              Provider.of<PositionService>(context, listen: false).latitude != null &&
-              Provider.of<PositionService>(context, listen: false).longitude != null) {
-            isOutOfBounds();
-          }
-        });
+    location.onLocationChanged.listen((_locationData) {
+      setState(() {
+        if (settings.enableAlerts == true &&
+            settings.boundary != null &&
+            Provider.of<PositionService>(context, listen: false).latitude !=
+                null &&
+            Provider.of<PositionService>(context, listen: false).longitude !=
+                null) {
+          isOutOfBounds();
+        }
       });
+    });
     super.initState();
+    var initializationSettingsAndroid = new AndroidInitializationSettings('app_icon');
+    var initializationSettingsIOS = new IOSInitializationSettings(onDidReceiveLocalNotification: onDidReceiveLocalNotification);
+    var initializationSettings = new InitializationSettings(initializationSettingsAndroid, initializationSettingsIOS);
+    flutterLocalNotificationsPlugin.initialize(initializationSettings, onSelectNotification: onSelectNotification);
+  }
+
+  Future onSelectNotification(String payload) async{
+    if (payload != null) {
+      debugPrint('notification payload :'+ payload);
+    }
+  }
+
+  Future onDidReceiveLocalNotification(int id, String title, String body, String payload) async {
+    await showDialog(
+      context: context,
+      builder: (BuildContext context) => CupertinoAlertDialog(
+        title: Text(title),
+        content: Text(body),
+      )
+    );
   }
 
   void _onItemTapped(int index) {
@@ -295,6 +329,11 @@ class GreenPage extends State<MyStatefulGreenPage> {
   void _setAlerts(bool value) {
     setState(() {
       settings.enableAlerts = value;
+      if (settings.enableAlerts == true) {
+        notificationService.showAlertNotification();
+      } else {
+        notificationService.cancelNotification(0);
+      }
       debugPrint(settings.enableAlerts.toString());
     });
   }
