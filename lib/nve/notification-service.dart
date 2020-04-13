@@ -31,7 +31,7 @@ class NotificationService {
     var platformChannelSpecifics = NotificationDetails(
         androidPlatformChannelSpecifics, iOSPlatformChannelSpecifics);
     await flutterLocalNotificationsPlugin.show(
-        0, 'OutOfBounds', 'Alerts enabled', platformChannelSpecifics,
+        ENABLE_NOTIFICATION_ID, 'OutOfBounds', 'Alerts enabled', platformChannelSpecifics,
         payload: 'item 0');
   }
 
@@ -43,7 +43,7 @@ class NotificationService {
     var platformChannelSpecifics = NotificationDetails(
         androidPlatformChannelSpecifics, iOSPlatformChannelSpecifics);
     await flutterLocalNotificationsPlugin.show(
-        1, 'OutOfBounds', 'Alert ! You are ' + meters + ' meters too far from your starting point', platformChannelSpecifics,
+        OUT_OF_BOUNDS_NOTIFICATION_ID, 'OutOfBounds', 'Alert ! You are ' + meters + ' meters too far from your starting point', platformChannelSpecifics,
         payload: 'item 1');
   }
 
@@ -55,7 +55,7 @@ class NotificationService {
     var platformChannelSpecifics = NotificationDetails(
         androidPlatformChannelSpecifics, iOSPlatformChannelSpecifics);
     await flutterLocalNotificationsPlugin.show(
-        2, 'OutOfBounds', 'Ok, all is ok right now.', platformChannelSpecifics,
+        BACK_IN_BOUNDS_NOTIFICATION_ID, 'OutOfBounds', 'Ok, all is ok right now.', platformChannelSpecifics,
         payload: 'item 2');
   }
 
