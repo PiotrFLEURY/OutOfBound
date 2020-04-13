@@ -64,7 +64,7 @@ class FirstScreen extends State<MyStatefulWidget> {
       isUserOutOfBounds = true;
     } else if (isUserOutOfBounds == true && distance <= settings.boundary) {
       notificationService.showBackInBoundsNotification();
-      notificationService.cancelNotification(NotificationService.id[1]);
+      notificationService.cancelNotification(NotificationService.OUT_OF_BOUNDS_NOTIFICATION_ID);
       isUserOutOfBounds = false;
     }
   }
@@ -333,7 +333,7 @@ class GreenPage extends State<MyStatefulGreenPage> {
       if (settings.enableAlerts == true) {
         notificationService.showAlertNotification();
       } else {
-        notificationService.cancelNotification(NotificationService.id[0]);
+        notificationService.cancelNotification(NotificationService.ENABLE_NOTIFICATION_ID);
       }
       debugPrint(settings.enableAlerts.toString());
     });

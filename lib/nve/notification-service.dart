@@ -19,7 +19,9 @@ class ReceivedNotification {
 }
 
 class NotificationService {
-  static const List<int> id = const [0,1,2];
+  static const ENABLE_NOTIFICATION_ID = 0;
+  static const OUT_OF_BOUNDS_NOTIFICATION_ID = 1;
+  static const BACK_IN_BOUNDS_NOTIFICATION_ID = 2;
 
   Future<void> showAlertNotification() async {
     var androidPlatformChannelSpecifics = AndroidNotificationDetails(
@@ -29,7 +31,7 @@ class NotificationService {
     var platformChannelSpecifics = NotificationDetails(
         androidPlatformChannelSpecifics, iOSPlatformChannelSpecifics);
     await flutterLocalNotificationsPlugin.show(
-        id[0], 'OutOfBounds', 'Alerts enabled', platformChannelSpecifics,
+        0, 'OutOfBounds', 'Alerts enabled', platformChannelSpecifics,
         payload: 'item 0');
   }
 
@@ -41,7 +43,7 @@ class NotificationService {
     var platformChannelSpecifics = NotificationDetails(
         androidPlatformChannelSpecifics, iOSPlatformChannelSpecifics);
     await flutterLocalNotificationsPlugin.show(
-        id[1], 'OutOfBounds', 'Alert ! You are ' + meters + ' meters too far from your starting point', platformChannelSpecifics,
+        1, 'OutOfBounds', 'Alert ! You are ' + meters + ' meters too far from your starting point', platformChannelSpecifics,
         payload: 'item 1');
   }
 
@@ -53,7 +55,7 @@ class NotificationService {
     var platformChannelSpecifics = NotificationDetails(
         androidPlatformChannelSpecifics, iOSPlatformChannelSpecifics);
     await flutterLocalNotificationsPlugin.show(
-        id[2], 'OutOfBounds', 'Ok, all is ok right now.', platformChannelSpecifics,
+        2, 'OutOfBounds', 'Ok, all is ok right now.', platformChannelSpecifics,
         payload: 'item 2');
   }
 
