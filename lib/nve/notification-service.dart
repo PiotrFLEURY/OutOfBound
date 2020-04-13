@@ -19,6 +19,8 @@ class ReceivedNotification {
 }
 
 class NotificationService {
+  static const List<int> id = const [0,1,2];
+
   Future<void> showAlertNotification() async {
     var androidPlatformChannelSpecifics = AndroidNotificationDetails(
         'your channel id', 'your channel name', 'your channel description',
@@ -27,7 +29,7 @@ class NotificationService {
     var platformChannelSpecifics = NotificationDetails(
         androidPlatformChannelSpecifics, iOSPlatformChannelSpecifics);
     await flutterLocalNotificationsPlugin.show(
-        0, 'OutOfBounds', 'Alerts enabled', platformChannelSpecifics,
+        id[0], 'OutOfBounds', 'Alerts enabled', platformChannelSpecifics,
         payload: 'item 0');
   }
 
@@ -39,7 +41,7 @@ class NotificationService {
     var platformChannelSpecifics = NotificationDetails(
         androidPlatformChannelSpecifics, iOSPlatformChannelSpecifics);
     await flutterLocalNotificationsPlugin.show(
-        1, 'OutOfBounds', 'Alert ! You are ' + meters + ' meters too far from your starting point', platformChannelSpecifics,
+        id[1], 'OutOfBounds', 'Alert ! You are ' + meters + ' meters too far from your starting point', platformChannelSpecifics,
         payload: 'item 1');
   }
 
@@ -51,7 +53,7 @@ class NotificationService {
     var platformChannelSpecifics = NotificationDetails(
         androidPlatformChannelSpecifics, iOSPlatformChannelSpecifics);
     await flutterLocalNotificationsPlugin.show(
-        2, 'OutOfBounds', 'Ok, all is ok right now.', platformChannelSpecifics,
+        id[2], 'OutOfBounds', 'Ok, all is ok right now.', platformChannelSpecifics,
         payload: 'item 2');
   }
 
