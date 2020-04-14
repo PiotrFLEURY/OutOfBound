@@ -81,8 +81,8 @@ class ActualPositionState extends State<ActualPosition> {
 
  updateLocationBoundary(SettingProvider _settingProvider, LocationProvider _locationProvider) {
 
-     location.onLocationChanged.listen((LocationData currentLocation) {
-    _locationProvider.current = currentLocation;  
+    location.onLocationChanged.listen((LocationData currentLocation) {
+      _locationProvider.current = currentLocation;  
     });  
 
   }
@@ -92,26 +92,21 @@ class ActualPositionState extends State<ActualPosition> {
   
     if(Provider.of<SettingProvider>(context).isEnableLocation == true )
     {
-        var boundary = double.parse(_provider.boundary);
-    var distance = _provid.distance;
-  if((_provid.haveDistance == true) && (distance > boundary)){
-      //Provider.of<SettingProvider>(context).isOutOfBounds = true;
-      return Text("You are out of bounds");
-      }
-    else 
-     return Text("OK");
-      
+      var boundary = double.parse(_provider.boundary);
+      var distance = _provid.distance;
+      if((_provid.haveDistance == true) && (distance > boundary))
+        return Text("You are out of bounds");
+      else 
+        return Text("OK");
     }
     else 
      return Text("You must enable alerts.");
   }
 
-
   @override
   Widget build(BuildContext context) {
  
     return Consumer2<LocationProvider,SettingProvider>(builder: (context, _provider, _providerSetting, _) {
-      
       updateDistance(_provider);
       updateLocationBoundary(_providerSetting,_provider);
       return Scaffold(
@@ -130,8 +125,6 @@ class ActualPositionState extends State<ActualPosition> {
               ),
               Text("Actually at ${distanceInMeters} meters from the starting point."),
               isUserOutOfBouds(_providerSetting,_provider),
-               
-              
             ],
           )
         ),

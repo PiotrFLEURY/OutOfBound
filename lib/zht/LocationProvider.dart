@@ -3,11 +3,11 @@ import 'package:flutter/material.dart';
 import 'package:location/location.dart';
 
 class LocationProvider with ChangeNotifier {
+  
   LocationData _currentLocation;
   LocationData _startingPosition;
   double _distance;
   bool _haveDistance=false;
-
 
   /*Send MAJ*/
   set starting(LocationData value) {
@@ -20,12 +20,12 @@ class LocationProvider with ChangeNotifier {
     notifyListeners();
   }
 
-    set distance(double value) {
+  set distance(double value) {
     _distance = value;
     notifyListeners();
   }
 
-      set haveDistance(bool value) {
+  set haveDistance(bool value) {
     _haveDistance = value;
     notifyListeners();
   }
@@ -33,8 +33,8 @@ class LocationProvider with ChangeNotifier {
   /*Save data*/
   get current => _currentLocation;
   get starting => _startingPosition;
-get distance => _distance;
-get haveDistance => _haveDistance;
+  get distance => _distance;
+  get haveDistance => _haveDistance;
 
 
 }
