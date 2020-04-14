@@ -56,7 +56,7 @@ void updateDistance(LocationProvider provider) async
           else {
             return Scaffold(
                backgroundColor: Colors.blue,
-              body: Center(child:Text("You don't have a start position !"),)
+              body: Center(child:Text("You don't have a start position ! \n Please choose a Start Position"),)
             );
           }
         }  

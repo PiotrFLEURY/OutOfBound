@@ -1,4 +1,5 @@
 import 'package:OutOfBounds/zht/LocationProvider.dart';
+import 'package:OutOfBounds/zht/SettingProvider.dart';
 import 'package:OutOfBounds/zht/user/user-page.dart';
 import 'package:flutter/material.dart';
 import 'package:OutOfBounds/zht/pages/StartPositionPage.dart';
@@ -26,7 +27,11 @@ class MyAppState extends State<ZhtMainPage> {
        providers: [
         ChangeNotifierProvider(
           create: (context) => LocationProvider(),
+         
         ),
+        ChangeNotifierProvider(
+          create: (context) => SettingProvider(),
+           )
       ],   
           child: new Scaffold(
           body: itemsChoice[whoSelected],

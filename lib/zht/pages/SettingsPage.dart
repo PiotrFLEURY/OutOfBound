@@ -13,6 +13,13 @@ class SettingsPage extends StatefulWidget{
 class _SettingsPageState extends State<SettingsPage> {
 
   TextEditingController value = new TextEditingController() ;
+  List<bool> _selections = [true, false];
+
+@override
+  void initState() {
+    super.initState();
+
+  }
 
 
   @override
@@ -20,15 +27,15 @@ class _SettingsPageState extends State<SettingsPage> {
 
 
   return Consumer<SettingProvider>(
-        builder: (context, _provider, _) {
+        builder: (context, _provid, _) {
                       return Scaffold(
                backgroundColor: Colors.green,
              body: Center(
                
                child: Column( 
-             mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+             mainAxisAlignment: MainAxisAlignment.center,
              
-            children : [
+            children : <Widget> [
              new TextField(
                 decoration: InputDecoration(
                     hintText: 'Boundary in meters'
@@ -39,14 +46,59 @@ class _SettingsPageState extends State<SettingsPage> {
                     controller: value,
                     onSubmitted: (String value){
                       setState((){
-                      _provider.boundary = value;
-                      print(_provider.boundary);
+                      _provid.boundary = value;
+                      print(_provid.boundary);
                     });               
                     },
                 textInputAction: TextInputAction.done
             ),
-             
-            
+            Text("Enable Alert : "),
+    
+             ToggleButtons(
+                borderColor: Colors.black,
+                fillColor: Colors.grey,
+                borderWidth: 2,
+                selectedBorderColor: Colors.black,
+                selectedColor: Colors.white,
+                borderRadius: BorderRadius.circular(0),
+               children: <Widget>[
+                    Padding(
+                    padding: const EdgeInsets.all(8.0),
+                    child: Text(
+                        'TRUE',
+                        style: TextStyle(fontSize: 16),
+                    ),
+                    ),
+                    Padding(
+                    padding: const EdgeInsets.all(8.0),
+                    child: Text(
+                        'FALSE',
+                        style: TextStyle(fontSize: 16),
+                    ),
+                    ),
+                ],
+              isSelected: _selections,
+              onPressed: (int index) {
+                    if(index == 0) 
+                    {_provid.isEnableLocation = true;
+                      print("true");
+                      }
+                    if(index == 1) {
+                      _provid.isEnableLocation = false;
+                      print("false");}
+
+                setState(() {
+                 if(_selections[index] == false)
+                   { 
+                     _selections[0] = !_selections[0];
+                     _selections[1] = !_selections[1];
+                      
+                   } 
+                                     
+                });
+                
+              }, 
+             ),
                    
             ],
           ),
