@@ -11,7 +11,6 @@ class ActualPosition extends StatefulWidget {
 }
 
 class ActualPositionState extends State<ActualPosition> {
-
   Location location = new Location();
   bool _serviceEnabled;
   PermissionStatus _permissionGranted;
@@ -22,16 +21,16 @@ class ActualPositionState extends State<ActualPosition> {
   @override
   void initState() {
     super.initState();
-   
+
     initLocation();
   }
 
-  void setInitialLocation() async { 
-    Provider.of<LocationProvider>(context).current = await location.getLocation();
+  void setInitialLocation() async {
+    Provider.of<LocationProvider>(context).current =
+        await location.getLocation();
   }
 
   void initLocation() async {
-   
     _serviceEnabled = await location.serviceEnabled();
     if (!_serviceEnabled) {
       _serviceEnabled = await location.requestService();
@@ -47,9 +46,8 @@ class ActualPositionState extends State<ActualPosition> {
         return;
       }
     }
-     
+
     setInitialLocation();
-     
   }
 
   getLatandLng() {
@@ -60,7 +58,8 @@ class ActualPositionState extends State<ActualPosition> {
       return Text("You don't have a start position !");
   }
 
-  Future<double> distanceBetween2(LocationData current, LocationData start) async {
+  Future<double> distanceBetween2(
+      LocationData current, LocationData start) async {
     distanceInMeters = await geolocator.distanceBetween(
         current.latitude, current.longitude, start.latitude, start.longitude);
     return distanceInMeters;
@@ -77,57 +76,49 @@ class ActualPositionState extends State<ActualPosition> {
     }
   }
 
-
-
- updateLocationBoundary(SettingProvider _settingProvider, LocationProvider _locationProvider) {
-
+  updateLocationBoundary(
+      SettingProvider _settingProvider, LocationProvider _locationProvider) {
     location.onLocationChanged.listen((LocationData currentLocation) {
-      _locationProvider.current = currentLocation;  
-    });  
-
+      _locationProvider.current = currentLocation;
+    });
   }
 
-
-  isUserOutOfBouds(SettingProvider _provider, LocationProvider _provid){
-  
-    if(Provider.of<SettingProvider>(context).isEnableLocation == true )
-    {
+  isUserOutOfBouds(SettingProvider _provider, LocationProvider _provid) {
+    if (Provider.of<SettingProvider>(context).isEnableLocation == true) {
       var boundary = double.parse(_provider.boundary);
       var distance = _provid.distance;
-      if((_provid.haveDistance == true) && (distance > boundary))
+      if ((_provid.haveDistance == true) && (distance > boundary))
         return Text("You are out of bounds");
-      else 
+      else
         return Text("OK");
-    }
-    else 
-     return Text("You must enable alerts.");
+    } else
+      return Text("You must enable alerts.");
   }
 
   @override
   Widget build(BuildContext context) {
- 
-    return Consumer2<LocationProvider,SettingProvider>(builder: (context, _provider, _providerSetting, _) {
+    return Consumer2<LocationProvider, SettingProvider>(
+        builder: (context, _provider, _providerSetting, _) {
       updateDistance(_provider);
-      updateLocationBoundary(_providerSetting,_provider);
+      updateLocationBoundary(_providerSetting, _provider);
       return Scaffold(
         backgroundColor: Colors.red,
         body: Center(
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-            children: <Widget>[
-              getLatandLng(),
-              RaisedButton(
+            child: Column(
+          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+          children: <Widget>[
+            getLatandLng(),
+            RaisedButton(
                 child: Text("Make as start"),
                 onPressed: () {
                   _provider.starting = _provider.current;
                   _provider.haveDistance = true;
-                }
-              ),
-              Text("Actually at ${distanceInMeters} meters from the starting point."),
-              isUserOutOfBouds(_providerSetting,_provider),
-            ],
-          )
-        ),
+                }),
+            Text(
+                "Actually at $distanceInMeters meters from the starting point."),
+            isUserOutOfBouds(_providerSetting, _provider),
+          ],
+        )),
       );
     });
   }

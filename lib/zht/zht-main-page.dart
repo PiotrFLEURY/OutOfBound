@@ -1,17 +1,18 @@
 import 'package:OutOfBounds/zht/LocationProvider.dart';
 import 'package:OutOfBounds/zht/SettingProvider.dart';
-import 'package:OutOfBounds/zht/user/user-page.dart';
 import 'package:flutter/material.dart';
 import 'package:OutOfBounds/zht/pages/StartPositionPage.dart';
 import 'package:OutOfBounds/zht/pages/ActualPosition.dart';
 import 'package:OutOfBounds/zht/pages/SettingsPage.dart';
 import 'package:provider/provider.dart';
+
 class ZhtMainPage extends StatefulWidget {
   @override
   State<StatefulWidget> createState() {
     return MyAppState();
   }
 }
+
 class MyAppState extends State<ZhtMainPage> {
   int whoSelected = 0;
   final itemsChoice = [
@@ -22,47 +23,39 @@ class MyAppState extends State<ZhtMainPage> {
 
   @override
   Widget build(BuildContext context) {
-
     return MultiProvider(
-       providers: [
+      providers: [
         ChangeNotifierProvider(
           create: (context) => LocationProvider(),
-         
         ),
         ChangeNotifierProvider(
           create: (context) => SettingProvider(),
-           )
-      ],   
-          child: new Scaffold(
+        )
+      ],
+      child: new Scaffold(
           body: itemsChoice[whoSelected],
-
-          bottomNavigationBar: BottomNavigationBar(  
+          bottomNavigationBar: BottomNavigationBar(
             currentIndex: whoSelected,
-            onTap:(int index){
-                setState((){
+            onTap: (int index) {
+              setState(() {
                 whoSelected = index;
               });
             },
-            items:[
+            items: [
               BottomNavigationBarItem(
                 icon: Icon(Icons.home),
                 title: Text('Start Position'),
               ),
-               BottomNavigationBarItem(
+              BottomNavigationBarItem(
                 icon: Icon(Icons.home),
                 title: Text('Actual Position'),
               ),
-               BottomNavigationBarItem(
+              BottomNavigationBarItem(
                 icon: Icon(Icons.settings),
                 title: Text('Setting'),
               ),
             ],
-          ) 
-      
-      ),
-      );
-      
-        
-    
+          )),
+    );
   }
 }

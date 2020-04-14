@@ -6,10 +6,12 @@ class PositionService with ChangeNotifier {
 
   set longitude(double longitude) {
     _startingLongitude = longitude;
+    notifyListeners();
   }
 
   set latitude(double latitude) {
     _startingLatitude = latitude;
+    notifyListeners();
   }
 
   double get longitude {
