@@ -6,6 +6,10 @@ Tranning application created to explore Flutter recipies.
 
 Locate the user and notifiy him when he goes out of the bound that he specified before.
 
+## Build status
+
+[![Codemagic build status](https://api.codemagic.io/apps/5e9484010fc3d49c297b47aa/5e9484010fc3d49c297b47a9/status_badge.svg)](https://codemagic.io/apps/5e9484010fc3d49c297b47aa/5e9484010fc3d49c297b47a9/latest_build)
+
 ## Participation
 
 Each participant must create a branch for each feature named as follow :
