@@ -15,7 +15,8 @@ Geolocator geo = new Geolocator();
 bool _serviceEnabled;
 PermissionStatus _permissionGranted;
 LocationData _locationData;
-FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin = FlutterLocalNotificationsPlugin();
+FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin =
+    FlutterLocalNotificationsPlugin();
 NotificationService notificationService = new NotificationService();
 
 class NveMainPage extends StatelessWidget {
@@ -45,6 +46,10 @@ class MyStatefulWidget extends StatefulWidget {
 
 class FirstScreen extends State<MyStatefulWidget> {
   int _selectedIndex = 0;
+  static const BLUE_PAGE_INDEX = 0;
+  static const RED_PAGE_INDEX = 1;
+  static const GREEN_PAGE_INDEX = 2;
+  Alignment _alignment = Alignment.bottomLeft;
   bool isUserOutOfBounds = false;
   final List<Widget> _children = [
     MyStatefulBluePage(),
@@ -64,7 +69,8 @@ class FirstScreen extends State<MyStatefulWidget> {
       isUserOutOfBounds = true;
     } else if (isUserOutOfBounds == true && distance <= settings.boundary) {
       notificationService.showBackInBoundsNotification();
-      notificationService.cancelNotification(NotificationService.OUT_OF_BOUNDS_NOTIFICATION_ID);
+      notificationService.cancelNotification(
+          NotificationService.OUT_OF_BOUNDS_NOTIFICATION_ID);
       isUserOutOfBounds = false;
     }
   }
@@ -84,30 +90,45 @@ class FirstScreen extends State<MyStatefulWidget> {
       });
     });
     super.initState();
-    var initializationSettingsAndroid = new AndroidInitializationSettings('app_icon');
-    var initializationSettingsIOS = new IOSInitializationSettings(onDidReceiveLocalNotification: onDidReceiveLocalNotification);
-    var initializationSettings = new InitializationSettings(initializationSettingsAndroid, initializationSettingsIOS);
-    flutterLocalNotificationsPlugin.initialize(initializationSettings, onSelectNotification: onSelectNotification);
+    var initializationSettingsAndroid =
+        new AndroidInitializationSettings('app_icon');
+    var initializationSettingsIOS = new IOSInitializationSettings(
+        onDidReceiveLocalNotification: onDidReceiveLocalNotification);
+    var initializationSettings = new InitializationSettings(
+        initializationSettingsAndroid, initializationSettingsIOS);
+    flutterLocalNotificationsPlugin.initialize(initializationSettings,
+        onSelectNotification: onSelectNotification);
   }
 
-  Future onSelectNotification(String payload) async{
+  Future onSelectNotification(String payload) async {
     if (payload != null) {
-      debugPrint('notification payload :'+ payload);
+      debugPrint('notification payload :' + payload);
     }
   }
 
-  Future onDidReceiveLocalNotification(int id, String title, String body, String payload) async {
+  Future onDidReceiveLocalNotification(
+      int id, String title, String body, String payload) async {
     await showDialog(
-      context: context,
-      builder: (BuildContext context) => CupertinoAlertDialog(
-        title: Text(title),
-        content: Text(body),
-      )
-    );
+        context: context,
+        builder: (BuildContext context) => CupertinoAlertDialog(
+              title: Text(title),
+              content: Text(body),
+            ));
   }
 
-  void _onItemTapped(int index) {
+  _onItemTapped(int index) {
     setState(() {
+      switch (index) {
+        case 0 :
+          _alignment = Alignment.bottomLeft;
+          break;
+        case 1 :
+          _alignment = Alignment.bottomCenter;
+          break;
+        case 2 :
+          _alignment = Alignment.bottomRight;
+          break;
+      }
       _selectedIndex = index;
     });
   }
@@ -116,18 +137,57 @@ class FirstScreen extends State<MyStatefulWidget> {
   Widget build(BuildContext ctxt) {
     return new Scaffold(
       body: _children[_selectedIndex],
-      bottomNavigationBar: BottomNavigationBar(
-          currentIndex: _selectedIndex,
-          onTap: (index) => _onItemTapped(index),
-          items: [
-            BottomNavigationBarItem(
-                icon: Icon(Icons.home), title: Text("Start position")),
-            BottomNavigationBarItem(
-                icon: Icon(Icons.arrow_back), title: Text("Actual position")),
-            BottomNavigationBarItem(
-                icon: Icon(Icons.settings), title: Text("Settings")),
-          ]),
-    );
+      bottomNavigationBar: Container(
+        width: MediaQuery.of(context).size.width,
+        alignment: Alignment.bottomCenter,
+        height: kBottomNavigationBarHeight,
+        child: 
+          Stack(children: <Widget>[
+            AnimatedAlign(
+              duration: Duration(milliseconds: 500),
+              alignment: _alignment,
+              child: Container(
+                width: 120,
+                height: kBottomNavigationBarHeight,
+                padding: EdgeInsets.all(5),
+                child: Container(
+                  decoration: BoxDecoration(
+                    color: Colors.amber,
+                    borderRadius: BorderRadius.circular(10),
+                  ),
+                ),
+              ),
+            ),
+            Row(
+              crossAxisAlignment: CrossAxisAlignment.stretch,
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: <Widget>[
+                Expanded(
+                  child: FlatButton.icon(
+                    icon: Icon(Icons.home, size: 15),
+                    onPressed: () => _onItemTapped(BLUE_PAGE_INDEX),
+                    label: Text("Starting position", style: TextStyle(fontSize: 8),),
+                  )
+                ),
+                Expanded(
+                  child: FlatButton.icon(
+                    icon: Icon(Icons.arrow_back, size: 15),
+                    onPressed: () => _onItemTapped(RED_PAGE_INDEX),
+                    label: Text("Current position", style: TextStyle(fontSize: 8),)
+                  )
+                ),
+                Expanded(
+                  child: FlatButton.icon(
+                    icon: Icon(Icons.settings, size: 15),
+                    onPressed: () => _onItemTapped(GREEN_PAGE_INDEX),
+                    label: Text("Settings", style: TextStyle(fontSize: 8),)
+                  )
+                ),                               
+              ]
+            )
+          ])
+        ),
+      );
   }
 }
 
@@ -333,7 +393,8 @@ class GreenPage extends State<MyStatefulGreenPage> {
       if (settings.enableAlerts == true) {
         notificationService.showAlertNotification();
       } else {
-        notificationService.cancelNotification(NotificationService.ENABLE_NOTIFICATION_ID);
+        notificationService
+            .cancelNotification(NotificationService.ENABLE_NOTIFICATION_ID);
       }
       debugPrint(settings.enableAlerts.toString());
     });
