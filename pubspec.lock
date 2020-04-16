@@ -197,6 +197,13 @@ packages:
       name: platform
       url: "https://pub.dartlang.org"
     source: hosted
+    version: "2.4.0"
+  platform:
+    dependency: transitive
+    description:
+      name: platform
+      url: "https://pub.dartlang.org"
+    source: hosted
     version: "2.2.1"
   plugin_platform_interface:
     dependency: transitive
