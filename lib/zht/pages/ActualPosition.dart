@@ -94,7 +94,32 @@ class ActualPositionState extends State<ActualPosition> {
       SettingProvider _settingProvider, LocationProvider _locationProvider) {
     location.onLocationChanged.listen((LocationData currentLocation) {
       _locationProvider.current = currentLocation;
+      allNotifications(_settingProvider, _locationProvider);
     });
+    location.changeSettings(interval: 5000, distanceFilter: 1);
+  }
+
+  allNotifications(
+      SettingProvider _settingProvider, LocationProvider _locationProvider) {
+    var boundary = double.parse(_settingProvider.boundary);
+    var distance = _locationProvider.distance;
+
+    if (Provider.of<SettingProvider>(context).isEnableLocation == true) {
+      showAlertsNotification();
+    }
+
+    if (_locationProvider.haveDistance == true &&
+        distance > boundary &&
+        (test == false)) {
+      showIsOutOfBoundsNotification(
+          _settingProvider, _locationProvider, distance);
+      test = true;
+    } else if (_locationProvider.haveDistance == true &&
+        (distance <= boundary) &&
+        (test == true)) {
+      showItsOKNotification(_settingProvider, _locationProvider);
+      test = false;
+    }
   }
 
   isUserOutOfBouds(SettingProvider _provider, LocationProvider _provid) {
@@ -120,9 +145,28 @@ class ActualPositionState extends State<ActualPosition> {
     var platform = NotificationDetails(android, iOS);
     await flutterLocalNotificationsPlugin
         .show(0, 'OutOfBounds', 'Alerts enabled', platform, payload: 'item x');
+    test = true;
   }
 
-  showIsOutOfBoundsNotification(
+  showIsOutOfBoundsNotification(SettingProvider _provider,
+      LocationProvider _provid, double distance) async {
+    var android = AndroidNotificationDetails(
+        'channel id', 'channel NAME', 'CHANNEL DESCRIPTION',
+        importance: Importance.Max,
+        priority: Priority.High,
+        ticker: 'ticker',
+        autoCancel: true);
+    var iOS = IOSNotificationDetails();
+    var platform = NotificationDetails(android, iOS);
+    await flutterLocalNotificationsPlugin.show(
+        1,
+        'OutOfBounds',
+        "Alert ! You are ${distance} meter too far from your starting point. ",
+        platform,
+        payload: 'item x');
+  }
+
+  showItsOKNotification(
       SettingProvider _provider, LocationProvider _provid) async {
     var android = AndroidNotificationDetails(
         'channel id', 'channel NAME', 'CHANNEL DESCRIPTION',
@@ -133,34 +177,9 @@ class ActualPositionState extends State<ActualPosition> {
     var iOS = IOSNotificationDetails();
     var platform = NotificationDetails(android, iOS);
 
-    var boundary = double.parse(_provider.boundary);
-    var distance = _provid.distance;
-
-    if ((_provid.haveDistance == true) &&
-        (distance > boundary) &&
-        (test == false)) {
-      await flutterLocalNotificationsPlugin.show(
-          0,
-          'OutOfBounds',
-          'Alert ! You are ${distance} meters too far from the starting point.',
-          platform,
-          payload: 'item x');
-      test = true;
-    } else if ((_provid.haveDistance == true) &&
-        (distance <= boundary) &&
-        (test == true)) {
-      await flutterLocalNotificationsPlugin.show(
-          0, 'OutOfBounds', 'Ok, all is all right now', platform,
-          payload: 'item x');
-      test = false;
-    }
-  }
-
-  allNotification(SettingProvider _provider, LocationProvider _provid) {
-    if (Provider.of<SettingProvider>(context).isEnableLocation == true) {
-      showAlertsNotification();
-    }
-    showIsOutOfBoundsNotification(_provider, _provid);
+    await flutterLocalNotificationsPlugin.show(
+        1, 'OutOfBounds', "Ok, all is all right now.", platform,
+        payload: 'item x');
   }
 
   @override
@@ -169,7 +188,7 @@ class ActualPositionState extends State<ActualPosition> {
         builder: (context, _provider, _providerSetting, _) {
       updateDistance(_provider);
       updateLocationBoundary(_providerSetting, _provider);
-      allNotification(_providerSetting, _provider);
+
       return Scaffold(
         backgroundColor: Colors.red,
         body: Center(
