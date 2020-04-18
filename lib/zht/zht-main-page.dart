@@ -20,7 +20,6 @@ class MyAppState extends State<ZhtMainPage> {
     ActualPosition(),
     SettingsPage(),
   ];
-
   @override
   Widget build(BuildContext context) {
     return MultiProvider(

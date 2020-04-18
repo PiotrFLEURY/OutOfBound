@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:location/location.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:OutOfBounds/zht/LocationProvider.dart';
 import 'package:OutOfBounds/zht/SettingProvider.dart';
 import 'package:provider/provider.dart';
-import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 
 class ActualPosition extends StatefulWidget {
   @override
@@ -19,8 +19,6 @@ class ActualPositionState extends State<ActualPosition> {
   Geolocator geolocator = new Geolocator();
   double distanceInMeters;
 
-  FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin;
-
   var test = false;
 
   @override
@@ -29,6 +27,8 @@ class ActualPositionState extends State<ActualPosition> {
     initLocation();
     initNotification();
   }
+
+  FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin;
 
   initNotification() {
     flutterLocalNotificationsPlugin = FlutterLocalNotificationsPlugin();
@@ -39,9 +39,38 @@ class ActualPositionState extends State<ActualPosition> {
     flutterLocalNotificationsPlugin.initialize(initializationSettings);
   }
 
-  void setInitialLocation() async {
-    Provider.of<LocationProvider>(context).current =
-        await location.getLocation();
+  showIsOutOfBoundsNotification(SettingProvider _provider,
+      LocationProvider _provid, double distance) async {
+    var android = AndroidNotificationDetails(
+        'channel id', 'channel NAME', 'CHANNEL DESCRIPTION',
+        importance: Importance.Max,
+        priority: Priority.High,
+        ticker: 'ticker',
+        autoCancel: true);
+    var iOS = IOSNotificationDetails();
+    var platform = NotificationDetails(android, iOS);
+    await flutterLocalNotificationsPlugin.show(
+        1,
+        'OutOfBounds',
+        "Alert ! You are ${distance} meter too far from your starting point. ",
+        platform,
+        payload: 'item x');
+  }
+
+  showItsOKNotification(
+      SettingProvider _provider, LocationProvider _provid) async {
+    var android = AndroidNotificationDetails(
+        'channel id', 'channel NAME', 'CHANNEL DESCRIPTION',
+        importance: Importance.Max,
+        priority: Priority.High,
+        ticker: 'ticker',
+        autoCancel: true);
+    var iOS = IOSNotificationDetails();
+    var platform = NotificationDetails(android, iOS);
+
+    await flutterLocalNotificationsPlugin.show(
+        1, 'OutOfBounds', "Ok, all is all right now.", platform,
+        payload: 'item x');
   }
 
   void initLocation() async {
@@ -62,6 +91,11 @@ class ActualPositionState extends State<ActualPosition> {
     }
 
     setInitialLocation();
+  }
+
+  void setInitialLocation() async {
+    Provider.of<LocationProvider>(context).current =
+        await location.getLocation();
   }
 
   getLatandLng() {
@@ -104,8 +138,17 @@ class ActualPositionState extends State<ActualPosition> {
     var boundary = double.parse(_settingProvider.boundary);
     var distance = _locationProvider.distance;
 
-    if (Provider.of<SettingProvider>(context).isEnableLocation == true) {
-      showAlertsNotification();
+    if (_locationProvider.haveDistance == true &&
+        distance > boundary &&
+        (test == false)) {
+      showIsOutOfBoundsNotification(
+          _settingProvider, _locationProvider, distance);
+      test = true;
+    } else if (_locationProvider.haveDistance == true &&
+        (distance <= boundary) &&
+        (test == true)) {
+      showItsOKNotification(_settingProvider, _locationProvider);
+      test = false;
     }
 
     if (_locationProvider.haveDistance == true &&
@@ -134,54 +177,6 @@ class ActualPositionState extends State<ActualPosition> {
       return Text("You must enable alerts.");
   }
 
-  showAlertsNotification() async {
-    var android = AndroidNotificationDetails(
-        'channel id', 'channel NAME', 'CHANNEL DESCRIPTION',
-        importance: Importance.Max,
-        priority: Priority.High,
-        ticker: 'ticker',
-        autoCancel: false);
-    var iOS = IOSNotificationDetails();
-    var platform = NotificationDetails(android, iOS);
-    await flutterLocalNotificationsPlugin
-        .show(0, 'OutOfBounds', 'Alerts enabled', platform, payload: 'item x');
-    test = true;
-  }
-
-  showIsOutOfBoundsNotification(SettingProvider _provider,
-      LocationProvider _provid, double distance) async {
-    var android = AndroidNotificationDetails(
-        'channel id', 'channel NAME', 'CHANNEL DESCRIPTION',
-        importance: Importance.Max,
-        priority: Priority.High,
-        ticker: 'ticker',
-        autoCancel: true);
-    var iOS = IOSNotificationDetails();
-    var platform = NotificationDetails(android, iOS);
-    await flutterLocalNotificationsPlugin.show(
-        1,
-        'OutOfBounds',
-        "Alert ! You are ${distance} meter too far from your starting point. ",
-        platform,
-        payload: 'item x');
-  }
-
-  showItsOKNotification(
-      SettingProvider _provider, LocationProvider _provid) async {
-    var android = AndroidNotificationDetails(
-        'channel id', 'channel NAME', 'CHANNEL DESCRIPTION',
-        importance: Importance.Max,
-        priority: Priority.High,
-        ticker: 'ticker',
-        autoCancel: true);
-    var iOS = IOSNotificationDetails();
-    var platform = NotificationDetails(android, iOS);
-
-    await flutterLocalNotificationsPlugin.show(
-        1, 'OutOfBounds', "Ok, all is all right now.", platform,
-        payload: 'item x');
-  }
-
   @override
   Widget build(BuildContext context) {
     return Consumer2<LocationProvider, SettingProvider>(
@@ -204,7 +199,7 @@ class ActualPositionState extends State<ActualPosition> {
                 }),
             Text(
                 "Actually at ${_provider.distance} meters from the starting point."),
-            isUserOutOfBouds(_providerSetting, _provider),
+            // isUserOutOfBouds(_providerSetting,_provider),
           ],
         )),
       );

@@ -2,6 +2,8 @@ import 'package:OutOfBounds/zht/SettingProvider.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:OutOfBounds/zht/zht-main-page.dart';
+import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:provider/provider.dart';
 
 class SettingsPage extends StatefulWidget{
@@ -15,12 +17,34 @@ class _SettingsPageState extends State<SettingsPage> {
   TextEditingController value = new TextEditingController() ;
   List<bool> _selections ;
 
-@override
+    FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin;
+
+    @override
   void initState() {
     super.initState();
     _selections=[];
+initNotification();
   }
 
+  initNotification()
+  {
+    flutterLocalNotificationsPlugin = FlutterLocalNotificationsPlugin();
+    var initializationAndroid = AndroidInitializationSettings('app_icon');
+    var initializationIOS = IOSInitializationSettings();
+    var initializationSettings = InitializationSettings(initializationAndroid,initializationIOS);
+    flutterLocalNotificationsPlugin.initialize(initializationSettings);
+  }
+
+  showAlertsNotification() async{
+    var android = AndroidNotificationDetails('channel id', 'channel NAME', 'CHANNEL DESCRIPTION',importance: Importance.Max, priority: Priority.High,ticker: 'ticker',autoCancel: false);
+    var iOS = IOSNotificationDetails();
+    var platform = NotificationDetails(android, iOS);
+      await flutterLocalNotificationsPlugin.show(0, 'OutOfBounds', 'Alerts enabled', platform,payload: 'item x');
+  }
+
+
+
+ 
   @override
   Widget build(BuildContext context){
 
@@ -80,6 +104,7 @@ class _SettingsPageState extends State<SettingsPage> {
               onPressed: (int index) {
                 if(index == 0) 
                 {_provid.isEnableLocation = true;
+                  showAlertsNotification();
                   print("true");
                 }
                 if(index == 1) {
