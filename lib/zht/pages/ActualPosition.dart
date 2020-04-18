@@ -19,6 +19,8 @@ class ActualPositionState extends State<ActualPosition> {
   Geolocator geolocator = new Geolocator();
   double distanceInMeters;
 
+  FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin;
+
   var test = false;
 
   @override
@@ -27,8 +29,6 @@ class ActualPositionState extends State<ActualPosition> {
     initLocation();
     initNotification();
   }
-
-  FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin;
 
   initNotification() {
     flutterLocalNotificationsPlugin = FlutterLocalNotificationsPlugin();
@@ -67,7 +67,6 @@ class ActualPositionState extends State<ActualPosition> {
         autoCancel: true);
     var iOS = IOSNotificationDetails();
     var platform = NotificationDetails(android, iOS);
-
     await flutterLocalNotificationsPlugin.show(
         1, 'OutOfBounds', "Ok, all is all right now.", platform,
         payload: 'item x');
@@ -89,7 +88,6 @@ class ActualPositionState extends State<ActualPosition> {
         return;
       }
     }
-
     setInitialLocation();
   }
 
@@ -137,20 +135,6 @@ class ActualPositionState extends State<ActualPosition> {
       SettingProvider _settingProvider, LocationProvider _locationProvider) {
     var boundary = double.parse(_settingProvider.boundary);
     var distance = _locationProvider.distance;
-
-    if (_locationProvider.haveDistance == true &&
-        distance > boundary &&
-        (test == false)) {
-      showIsOutOfBoundsNotification(
-          _settingProvider, _locationProvider, distance);
-      test = true;
-    } else if (_locationProvider.haveDistance == true &&
-        (distance <= boundary) &&
-        (test == true)) {
-      showItsOKNotification(_settingProvider, _locationProvider);
-      test = false;
-    }
-
     if (_locationProvider.haveDistance == true &&
         distance > boundary &&
         (test == false)) {
@@ -183,7 +167,6 @@ class ActualPositionState extends State<ActualPosition> {
         builder: (context, _provider, _providerSetting, _) {
       updateDistance(_provider);
       updateLocationBoundary(_providerSetting, _provider);
-
       return Scaffold(
         backgroundColor: Colors.red,
         body: Center(
@@ -199,7 +182,7 @@ class ActualPositionState extends State<ActualPosition> {
                 }),
             Text(
                 "Actually at ${_provider.distance} meters from the starting point."),
-            // isUserOutOfBouds(_providerSetting,_provider),
+            isUserOutOfBouds(_providerSetting, _provider),
           ],
         )),
       );

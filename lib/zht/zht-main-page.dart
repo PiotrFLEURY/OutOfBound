@@ -32,28 +32,29 @@ class MyAppState extends State<ZhtMainPage> {
           )
         ],
         child: new Scaffold(
-            body: itemsChoice[whoSelected],
-            bottomNavigationBar: BottomNavigationBar(
-              currentIndex: whoSelected,
-              onTap: (int index) {
-                setState(() {
-                  whoSelected = index;
-                });
-              },
-              items: [
-                BottomNavigationBarItem(
-                  icon: Icon(Icons.home),
-                  title: Text('Start Position'),
-                ),
-                BottomNavigationBarItem(
-                  icon: Icon(Icons.home),
-                  title: Text('Actual Position'),
-                ),
-                BottomNavigationBarItem(
-                  icon: Icon(Icons.settings),
-                  title: Text('Setting'),
-                ),
-              ],
-            )));
+          body: itemsChoice[whoSelected],
+          bottomNavigationBar: BottomNavigationBar(
+            currentIndex: whoSelected,
+            onTap: (int index) {
+              setState(() {
+                whoSelected = index;
+              });
+            },
+            items: [
+              BottomNavigationBarItem(
+                icon: Icon(Icons.home),
+                title: Text('Start Position'),
+              ),
+              BottomNavigationBarItem(
+                icon: Icon(Icons.home),
+                title: Text('Actual Position'),
+              ),
+              BottomNavigationBarItem(
+                icon: Icon(Icons.settings),
+                title: Text('Setting'),
+              ),
+            ],
+          ),
+        ));
   }
 }
