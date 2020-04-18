@@ -52,7 +52,7 @@ class ActualPositionState extends State<ActualPosition> {
     await flutterLocalNotificationsPlugin.show(
         1,
         'OutOfBounds',
-        "Alert ! You are ${distance} meter too far from your starting point. ",
+        "Alert ! You are $distance meter too far from your starting point. ",
         platform,
         payload: 'item x');
   }
