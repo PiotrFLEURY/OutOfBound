@@ -187,13 +187,6 @@ packages:
   petitparser:
     dependency: transitive
     description:
-      name: petitparser
-      url: "https://pub.dartlang.org"
-    source: hosted
-    version: "2.4.0"
-  platform:
-    dependency: transitive
-    description:
       name: platform
       url: "https://pub.dartlang.org"
     source: hosted
@@ -296,4 +289,4 @@ packages:
     version: "3.6.1"
 sdks:
   dart: ">=2.7.0 <3.0.0"
-  flutter: ">=1.12.13+hotfix.6 <2.0.0"
+flutter: ">=1.12.13+hotfix.6 <2.0.0"

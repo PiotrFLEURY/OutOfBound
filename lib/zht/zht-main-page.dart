@@ -24,38 +24,37 @@ class MyAppState extends State<ZhtMainPage> {
   @override
   Widget build(BuildContext context) {
     return MultiProvider(
-      providers: [
-        ChangeNotifierProvider(
-          create: (context) => LocationProvider(),
-        ),
-        ChangeNotifierProvider(
-          create: (context) => SettingProvider(),
-        )
-      ],
-      child: new Scaffold(
-          body: itemsChoice[whoSelected],
-          bottomNavigationBar: BottomNavigationBar(
-            currentIndex: whoSelected,
-            onTap: (int index) {
-              setState(() {
-                whoSelected = index;
-              });
-            },
-            items: [
-              BottomNavigationBarItem(
-                icon: Icon(Icons.home),
-                title: Text('Start Position'),
-              ),
-              BottomNavigationBarItem(
-                icon: Icon(Icons.home),
-                title: Text('Actual Position'),
-              ),
-              BottomNavigationBarItem(
-                icon: Icon(Icons.settings),
-                title: Text('Setting'),
-              ),
-            ],
-          )),
-    );
+        providers: [
+          ChangeNotifierProvider(
+            create: (context) => LocationProvider(),
+          ),
+          ChangeNotifierProvider(
+            create: (context) => SettingProvider(),
+          )
+        ],
+        child: new Scaffold(
+            body: itemsChoice[whoSelected],
+            bottomNavigationBar: BottomNavigationBar(
+              currentIndex: whoSelected,
+              onTap: (int index) {
+                setState(() {
+                  whoSelected = index;
+                });
+              },
+              items: [
+                BottomNavigationBarItem(
+                  icon: Icon(Icons.home),
+                  title: Text('Start Position'),
+                ),
+                BottomNavigationBarItem(
+                  icon: Icon(Icons.home),
+                  title: Text('Actual Position'),
+                ),
+                BottomNavigationBarItem(
+                  icon: Icon(Icons.settings),
+                  title: Text('Setting'),
+                ),
+              ],
+            )));
   }
 }
