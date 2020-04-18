@@ -21,7 +21,7 @@ class ActualPositionState extends State<ActualPosition> {
 
   FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin;
 
-  var test = false;
+  var isNotified = false;
 
   @override
   void initState() {
@@ -137,15 +137,15 @@ class ActualPositionState extends State<ActualPosition> {
     var distance = _locationProvider.distance;
     if (_locationProvider.haveDistance == true &&
         distance > boundary &&
-        (test == false)) {
+        (isNotified == false)) {
       showIsOutOfBoundsNotification(
           _settingProvider, _locationProvider, distance);
-      test = true;
+      isNotified = true;
     } else if (_locationProvider.haveDistance == true &&
         (distance <= boundary) &&
-        (test == true)) {
+        (isNotified == true)) {
       showItsOKNotification(_settingProvider, _locationProvider);
-      test = false;
+      isNotified = false;
     }
   }
 
