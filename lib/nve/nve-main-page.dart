@@ -119,13 +119,13 @@ class FirstScreen extends State<MyStatefulWidget> {
   _onItemTapped(int index) {
     setState(() {
       switch (index) {
-        case 0 :
+        case 0:
           _alignment = Alignment.bottomLeft;
           break;
-        case 1 :
+        case 1:
           _alignment = Alignment.bottomCenter;
           break;
-        case 2 :
+        case 2:
           _alignment = Alignment.bottomRight;
           break;
       }
@@ -138,11 +138,10 @@ class FirstScreen extends State<MyStatefulWidget> {
     return new Scaffold(
       body: _children[_selectedIndex],
       bottomNavigationBar: Container(
-        width: MediaQuery.of(context).size.width,
-        alignment: Alignment.bottomCenter,
-        height: kBottomNavigationBarHeight,
-        child: 
-          Stack(children: <Widget>[
+          width: MediaQuery.of(context).size.width,
+          alignment: Alignment.bottomCenter,
+          height: kBottomNavigationBarHeight,
+          child: Stack(children: <Widget>[
             AnimatedAlign(
               duration: Duration(milliseconds: 500),
               alignment: _alignment,
@@ -159,35 +158,46 @@ class FirstScreen extends State<MyStatefulWidget> {
               ),
             ),
             Row(
-              crossAxisAlignment: CrossAxisAlignment.stretch,
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: <Widget>[
-                Expanded(
-                  child: FlatButton.icon(
-                    icon: Icon(Icons.home, size: 15),
+                crossAxisAlignment: CrossAxisAlignment.stretch,
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: <Widget>[
+                  Expanded(
+                      child: FlatButton.icon(
+                    icon: new Image.asset(
+                      'assets/images/mansion.png',
+                      width: 20,
+                    ),
                     onPressed: () => _onItemTapped(BLUE_PAGE_INDEX),
-                    label: Text("Starting position", style: TextStyle(fontSize: 8),),
-                  )
-                ),
-                Expanded(
-                  child: FlatButton.icon(
-                    icon: Icon(Icons.arrow_back, size: 15),
-                    onPressed: () => _onItemTapped(RED_PAGE_INDEX),
-                    label: Text("Current position", style: TextStyle(fontSize: 8),)
-                  )
-                ),
-                Expanded(
-                  child: FlatButton.icon(
-                    icon: Icon(Icons.settings, size: 15),
-                    onPressed: () => _onItemTapped(GREEN_PAGE_INDEX),
-                    label: Text("Settings", style: TextStyle(fontSize: 8),)
-                  )
-                ),                               
-              ]
-            )
-          ])
-        ),
-      );
+                    label: Text(
+                      "Starting position",
+                      style: TextStyle(fontSize: 8),
+                    ),
+                  )),
+                  Expanded(
+                      child: FlatButton.icon(
+                          icon: new Image.asset(
+                            'assets/images/map.png',
+                            width: 20,
+                          ),
+                          onPressed: () => _onItemTapped(RED_PAGE_INDEX),
+                          label: Text(
+                            "Current position",
+                            style: TextStyle(fontSize: 8),
+                          ))),
+                  Expanded(
+                      child: FlatButton.icon(
+                          icon: new Image.asset(
+                            'assets/images/gear.png',
+                            width: 20,
+                          ),
+                          onPressed: () => _onItemTapped(GREEN_PAGE_INDEX),
+                          label: Text(
+                            "Settings",
+                            style: TextStyle(fontSize: 8),
+                          ))),
+                ])
+          ])),
+    );
   }
 }
 
@@ -228,35 +238,86 @@ class BluePage extends State<MyStatefulBluePage> {
         Provider.of<PositionService>(context, listen: false).longitude !=
             null) {
       return new Scaffold(
-          backgroundColor: Colors.blue,
-          body: Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              crossAxisAlignment: CrossAxisAlignment.center,
-              children: <Widget>[
-                Center(
-                  child: Text.rich(TextSpan(children: <TextSpan>[
-                    TextSpan(
-                        text: Provider.of<PositionService>(ctxt, listen: false)
-                            .longitude
-                            .toString()),
-                    TextSpan(text: " / "),
-                    TextSpan(
-                        text: Provider.of<PositionService>(ctxt, listen: false)
-                            .latitude
-                            .toString())
-                  ])),
+        backgroundColor: Colors.blue,
+        body: Stack(
+          children: <Widget>[
+            ClipPath(
+              clipper: MyCustomClipper(),
+              child: new Image.asset("assets/images/googlemap.png"),
+            ),
+            Positioned(
+              top: MediaQuery.of(context).size.height * 0.19,
+              left: MediaQuery.of(context).size.width * 0.42,
+              child: ClipOval(
+                child: Container(
+                  width: 75,
+                  height: 75,
+                  color: Colors.white,
                 ),
-                Center(
-                  child: Text.rich(TextSpan(children: <TextSpan>[
-                    TextSpan(text: "actually at "),
-                    TextSpan(text: _distance.toInt().toString()),
-                    TextSpan(text: " meters from this point")
-                  ])),
-                )
-              ]));
+              ),
+            ),
+            Positioned(
+              top: MediaQuery.of(context).size.height * 0.2,
+              left: MediaQuery.of(context).size.width * 0.45,
+              child: Image.asset("assets/images/mansion.png", width: 50,),
+            ),
+            Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                crossAxisAlignment: CrossAxisAlignment.center,
+                children: <Widget>[
+                  Center(
+                    child: Text.rich(TextSpan(children: <TextSpan>[
+                      TextSpan(
+                          text:
+                              Provider.of<PositionService>(ctxt, listen: false)
+                                  .longitude
+                                  .toString()),
+                      TextSpan(text: " / "),
+                      TextSpan(
+                          text:
+                              Provider.of<PositionService>(ctxt, listen: false)
+                                  .latitude
+                                  .toString())
+                    ])),
+                  ),
+                  Center(
+                    child: Text.rich(TextSpan(children: <TextSpan>[
+                      TextSpan(text: "actually at "),
+                      TextSpan(text: _distance.toInt().toString()),
+                      TextSpan(text: " meters from this point")
+                    ])),
+                  )
+                ])
+          ],
+        ),
+      );
     } else {
       return new Scaffold(
         backgroundColor: Colors.blue,
+        body: Stack(
+          children: <Widget>[
+            ClipPath(
+              clipper: MyCustomClipper(),
+              child: new Image.asset("assets/images/googlemap.png"),
+            ),
+            Positioned(
+              top: MediaQuery.of(context).size.height * 0.19,
+              left: MediaQuery.of(context).size.width * 0.42,
+              child: ClipOval(
+                child: Container(
+                  width: 75,
+                  height: 75,
+                  color: Colors.white,
+                ),
+              ),
+            ),
+            Positioned(
+              top: MediaQuery.of(context).size.height * 0.2,
+              left: MediaQuery.of(context).size.width * 0.45,
+              child: Image.asset("assets/images/mansion.png", width: 50,),
+            ),
+          ],
+        ),
       );
     }
   }
@@ -313,40 +374,89 @@ class RedPage extends State<MyStatefulRedPage> {
   Widget build(BuildContext ctxt) {
     if (_locationData != null) {
       return new Scaffold(
-          backgroundColor: Colors.red,
-          body: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            crossAxisAlignment: CrossAxisAlignment.center,
-            children: <Widget>[
-              Center(
-                child: Text.rich(TextSpan(children: <TextSpan>[
-                  TextSpan(text: _locationData.longitude.toString()),
-                  TextSpan(text: " / "),
-                  TextSpan(text: _locationData.latitude.toString())
-                ])),
+        backgroundColor: Colors.red,
+        body: Stack(
+          children: <Widget>[
+            ClipPath(
+              clipper: MyCustomClipper(),
+              child: new Image.asset("assets/images/googlemap.png"),
+            ),
+            Positioned(
+              top: MediaQuery.of(context).size.height * 0.19,
+              left: MediaQuery.of(context).size.width * 0.42,
+              child: ClipOval(
+                child: Container(
+                  width: 75,
+                  height: 75,
+                  color: Colors.white,
+                ),
               ),
-              Center(
-                  child: RaisedButton(
-                onPressed: () {
-                  Provider.of<PositionService>(context, listen: false)
-                      .longitude = _locationData.longitude;
-                  Provider.of<PositionService>(context, listen: false)
-                      .latitude = _locationData.latitude;
-                },
-                child: Text("Make as start"),
-              )),
-              Center(
-                child: Text.rich(TextSpan(children: <TextSpan>[
-                  TextSpan(text: "actually at "),
-                  TextSpan(text: _distance.toInt().toString()),
-                  TextSpan(text: " meters from the starting point")
-                ])),
-              ),
-            ],
-          ));
+            ),
+            Positioned(
+              top: MediaQuery.of(context).size.height * 0.2,
+              left: MediaQuery.of(context).size.width * 0.45,
+              child: Image.asset("assets/images/map.png", width: 50,),
+            ),
+            Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              crossAxisAlignment: CrossAxisAlignment.center,
+              children: <Widget>[
+                Center(
+                  child: Text.rich(TextSpan(children: <TextSpan>[
+                    TextSpan(text: _locationData.longitude.toString()),
+                    TextSpan(text: " / "),
+                    TextSpan(text: _locationData.latitude.toString())
+                  ])),
+                ),
+                Center(
+                    child: RaisedButton(
+                  onPressed: () {
+                    Provider.of<PositionService>(context, listen: false)
+                        .longitude = _locationData.longitude;
+                    Provider.of<PositionService>(context, listen: false)
+                        .latitude = _locationData.latitude;
+                  },
+                  child: Text("Make as start"),
+                )),
+                Center(
+                  child: Text.rich(TextSpan(children: <TextSpan>[
+                    TextSpan(text: "actually at "),
+                    TextSpan(text: _distance.toInt().toString()),
+                    TextSpan(text: " meters from the starting point")
+                  ])),
+                ),
+              ],
+            )
+          ],
+        ),
+      );
     } else {
       return new Scaffold(
         backgroundColor: Colors.red,
+        body: Stack(
+          children: <Widget>[
+            ClipPath(
+              clipper: MyCustomClipper(),
+              child: new Image.asset("assets/images/googlemap.png"),
+            ),
+            Positioned(
+              top: MediaQuery.of(context).size.height * 0.19,
+              left: MediaQuery.of(context).size.width * 0.42,
+              child: ClipOval(
+                child: Container(
+                  width: 75,
+                  height: 75,
+                  color: Colors.white,
+                ),
+              ),
+            ),
+            Positioned(
+              top: MediaQuery.of(context).size.height * 0.2,
+              left: MediaQuery.of(context).size.width * 0.45,
+              child: Image.asset("assets/images/map.png", width: 50,),
+            ),
+          ],
+        ),
       );
     }
   }
@@ -403,26 +513,69 @@ class GreenPage extends State<MyStatefulGreenPage> {
   @override
   Widget build(BuildContext ctxt) {
     return new Scaffold(
-        backgroundColor: Colors.green,
-        body: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            crossAxisAlignment: CrossAxisAlignment.center,
-            children: <Widget>[
-              Center(
-                child: Text("Boundary :"),
+      backgroundColor: Colors.green,
+      body: Stack(
+        children: <Widget>[
+          ClipPath(
+            clipper: MyCustomClipper(),
+            child: new Image.asset("assets/images/googlemap.png"),
+          ),
+          Positioned(
+            top: MediaQuery.of(context).size.height * 0.19,
+            left: MediaQuery.of(context).size.width * 0.42,
+            child: ClipOval(
+              child: Container(
+                width: 75,
+                height: 75,
+                color: Colors.white,
               ),
-              Center(
-                child: _setBoundary(),
-              ),
-              Center(
-                child: Text("Enable alerts :"),
-              ),
-              Center(
-                child: Checkbox(
-                  value: settings.enableAlerts,
-                  onChanged: (value) => _setAlerts(value),
+            ),
+          ),
+          Positioned(
+              top: MediaQuery.of(context).size.height * 0.205,
+              left: MediaQuery.of(context).size.width * 0.45,
+              child: Image.asset("assets/images/gear.png", width: 50,),
+          ),
+          Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              crossAxisAlignment: CrossAxisAlignment.center,
+              children: <Widget>[
+                Center(
+                  child: Text("Boundary :"),
                 ),
-              )
-            ]));
+                Center(
+                  child: _setBoundary(),
+                ),
+                Center(
+                  child: Text("Enable alerts :"),
+                ),
+                Center(
+                  child: Checkbox(
+                    value: settings.enableAlerts,
+                    onChanged: (value) => _setAlerts(value),
+                  ),
+                )
+              ])
+        ],
+      ),
+    );
+  }
+}
+
+class MyCustomClipper extends CustomClipper<Path> {
+  @override
+  Path getClip(Size size) {
+    var path = new Path();
+    path.moveTo(0, size.height * 0.5);
+    path.quadraticBezierTo(
+        size.width / 1.8, size.height / 1.6, size.width, size.height * 0.5);
+    path.lineTo(size.width, 0);
+    path.lineTo(0, 0);
+    return path;
+  }
+
+  @override
+  bool shouldReclip(CustomClipper<Path> oldClipper) {
+    return false;
   }
 }
