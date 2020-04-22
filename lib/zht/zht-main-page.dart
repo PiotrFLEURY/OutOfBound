@@ -23,10 +23,10 @@ class MyAppState extends State<ZhtMainPage> {
     ActualPosition(),
     SettingsPage(),
   ];
-  Alignment Aligne = Alignment.bottomLeft;
-  Color new_colors_starting =  Color.fromARGB(255, 128, 128, 128);
-  Color new_colors_current =  Color.fromARGB(255, 128, 128, 128);
-  Color new_colors_settings =  Color.fromARGB(255, 128, 128, 128);
+  Alignment aligne = Alignment.bottomLeft;
+  Color newColorsStarting =  Color.fromARGB(255, 128, 128, 128);
+  Color newColorsCurrent =  Color.fromARGB(255, 128, 128, 128);
+  Color newColorsSettings =  Color.fromARGB(255, 128, 128, 128);
 
   @override
   Widget build(BuildContext context) {
@@ -56,7 +56,7 @@ class MyAppState extends State<ZhtMainPage> {
                   Stack(                  
                     children: <Widget>[
                       Align(
-                        alignment: Aligne,
+                        alignment: aligne,
                         child:Padding(
                           padding: EdgeInsets.all(5.0),
                           child:AnimatedContainer( 
@@ -74,15 +74,15 @@ class MyAppState extends State<ZhtMainPage> {
                           width: WIDTH,
                           height: HEIGHT,
                           child: OutlineButton.icon(    
-                            label: Text("Starting location",style: new TextStyle(fontSize:TEXT_SIZE,color:new_colors_starting)),
-                            icon:Icon(Icons.location_city, color:new_colors_starting,size: ICON_SIZE,),
+                            label: Text("Starting location",style: new TextStyle(fontSize:TEXT_SIZE,color:newColorsStarting)),
+                            icon:Icon(Icons.location_city, color:newColorsStarting,size: ICON_SIZE,),
                             onPressed: (){
                               setState(() {
                                 whoSelected=0;
-                                Aligne= Alignment.bottomLeft;
-                                new_colors_starting=Colors.white;
-                                new_colors_current=Colors.grey;
-                                new_colors_settings=Colors.grey;
+                                aligne= Alignment.bottomLeft;
+                                newColorsStarting=Colors.white;
+                                newColorsCurrent=Colors.grey;
+                                newColorsSettings=Colors.grey;
                               });
                             }
                           )
@@ -94,15 +94,15 @@ class MyAppState extends State<ZhtMainPage> {
                           width: WIDTH,
                           height: HEIGHT,
                           child: OutlineButton.icon(    
-                            label: Text("Current Location",style: new TextStyle(fontSize:TEXT_SIZE,color:new_colors_current)),
-                            icon:Icon(Icons.my_location, color:new_colors_current,size: ICON_SIZE,),
+                            label: Text("Current Location",style: new TextStyle(fontSize:TEXT_SIZE,color:newColorsCurrent)),
+                            icon:Icon(Icons.my_location, color:newColorsCurrent,size: ICON_SIZE,),
                             onPressed: (){
                               setState(() {
                                 whoSelected=1;
-                                Aligne= Alignment.bottomCenter;
-                                new_colors_starting=Colors.grey;
-                                new_colors_current=Colors.white;
-                                new_colors_settings=Colors.grey;
+                                aligne= Alignment.bottomCenter;
+                                newColorsStarting=Colors.grey;
+                                newColorsCurrent=Colors.white;
+                                newColorsSettings=Colors.grey;
                               });
                             }
                           )
@@ -114,15 +114,15 @@ class MyAppState extends State<ZhtMainPage> {
                           width: WIDTH,
                           height: HEIGHT,
                           child: OutlineButton.icon(    
-                            label: Text("Settings",style: new TextStyle(fontSize:TEXT_SIZE,color:new_colors_settings)),
-                            icon:Icon(Icons.settings, color:new_colors_settings,size: ICON_SIZE,),
+                            label: Text("Settings",style: new TextStyle(fontSize:TEXT_SIZE,color:newColorsSettings)),
+                            icon:Icon(Icons.settings, color:newColorsSettings,size: ICON_SIZE,),
                             onPressed: (){
                               setState(() {
                                 whoSelected=2;
-                                Aligne= Alignment.bottomRight;
-                                new_colors_starting=Colors.grey;
-                                new_colors_current=Colors.grey;
-                                new_colors_settings=Colors.white;
+                                aligne= Alignment.bottomRight;
+                                newColorsStarting=Colors.grey;
+                                newColorsCurrent=Colors.grey;
+                                newColorsSettings=Colors.white;
                               });
                             }
                           )
