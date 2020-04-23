@@ -5,6 +5,7 @@ import 'package:flutter/services.dart';
 import 'package:location/location.dart';
 import 'package:provider/provider.dart';
 import 'package:geolocator/geolocator.dart';
+import 'package:geocoder/geocoder.dart';
 import 'position-service.dart';
 import 'settings-service.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
@@ -235,8 +236,8 @@ class BluePage extends State<MyStatefulBluePage> {
   @override
   Widget build(BuildContext ctxt) {
     if (Provider.of<PositionService>(context, listen: false).latitude != null &&
-        Provider.of<PositionService>(context, listen: false).longitude !=
-            null) {
+        Provider.of<PositionService>(context, listen: false).longitude != null &&
+        Provider.of<PositionService>(context, listen: false).addresse != null) {
       return new Scaffold(
         backgroundColor: Colors.blue,
         body: Stack(
@@ -259,35 +260,54 @@ class BluePage extends State<MyStatefulBluePage> {
             Positioned(
               top: MediaQuery.of(context).size.height * 0.2,
               left: MediaQuery.of(context).size.width * 0.45,
-              child: Image.asset("assets/images/mansion.png", width: 50,),
+              child: Image.asset(
+                "assets/images/mansion.png",
+                width: 50,
+              ),
             ),
-            Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                crossAxisAlignment: CrossAxisAlignment.center,
-                children: <Widget>[
-                  Center(
-                    child: Text.rich(TextSpan(children: <TextSpan>[
-                      TextSpan(
-                          text:
-                              Provider.of<PositionService>(ctxt, listen: false)
-                                  .longitude
-                                  .toString()),
-                      TextSpan(text: " / "),
-                      TextSpan(
-                          text:
-                              Provider.of<PositionService>(ctxt, listen: false)
-                                  .latitude
-                                  .toString())
-                    ])),
-                  ),
-                  Center(
-                    child: Text.rich(TextSpan(children: <TextSpan>[
-                      TextSpan(text: "actually at "),
-                      TextSpan(text: _distance.toInt().toString()),
-                      TextSpan(text: " meters from this point")
-                    ])),
+            Material(
+              clipBehavior: Clip.antiAlias,
+              animationDuration: Duration(seconds: 1),
+              color: Colors.transparent,
+              child: Center(
+                child: Container(
+                  height: 200,
+                  width: 400,
+                  child: Card(
+                    child: Stack(children: <Widget>[
+                      Positioned(
+                        top: 40,
+                        left: 35,
+                        width: 350,
+                        child: Text(Provider.of<PositionService>(context, listen: false).addresse, style: TextStyle(
+                          fontSize: 12,
+                          fontWeight: FontWeight.bold,
+                        ),),
+                      ),
+                      Positioned(
+                        bottom: 40,
+                        left: 175,
+                        child:
+                          Text(_distance.toInt().toString(), style: TextStyle(
+                            color: Colors.orange,
+                            fontSize: 50,
+                            fontWeight: FontWeight.bold,
+                          ),),
+                      ),
+                      Positioned(
+                        bottom: 30,
+                        left: 140,
+                        child: 
+                          Text("meters from this point", style: TextStyle(
+                            fontSize: 10,
+                            color: Colors.grey
+                          ),),
+                      )
+                    ]),
                   )
-                ])
+                )
+              )
+            ),
           ],
         ),
       );
@@ -314,7 +334,10 @@ class BluePage extends State<MyStatefulBluePage> {
             Positioned(
               top: MediaQuery.of(context).size.height * 0.2,
               left: MediaQuery.of(context).size.width * 0.45,
-              child: Image.asset("assets/images/mansion.png", width: 50,),
+              child: Image.asset(
+                "assets/images/mansion.png",
+                width: 50,
+              ),
             ),
           ],
         ),
@@ -332,6 +355,7 @@ class MyStatefulRedPage extends StatefulWidget {
 
 class RedPage extends State<MyStatefulRedPage> {
   double _distance = 0;
+  String _addresse = "";
 
   Future<void> askPermission() async {
     _serviceEnabled = await location.serviceEnabled();
@@ -351,6 +375,7 @@ class RedPage extends State<MyStatefulRedPage> {
     }
 
     _locationData = await location.getLocation();
+    _addresse = await getAddress();
     if (Provider.of<PositionService>(context, listen: false).latitude != null &&
         Provider.of<PositionService>(context, listen: false).longitude !=
             null) {
@@ -362,10 +387,18 @@ class RedPage extends State<MyStatefulRedPage> {
     }
   }
 
+  Future<String> getAddress() async {
+    final _coordinates = new Coordinates(_locationData.latitude, _locationData.longitude);
+    var _addresses = await Geocoder.local.findAddressesFromCoordinates(_coordinates);
+    var _first = _addresses.first;
+    return _first.addressLine;
+  }
+
   @override
   void initState() {
     askPermission().then((result) {
-      setState(() {});
+      setState(() {
+      });
     });
     super.initState();
   }
@@ -395,38 +428,69 @@ class RedPage extends State<MyStatefulRedPage> {
             Positioned(
               top: MediaQuery.of(context).size.height * 0.2,
               left: MediaQuery.of(context).size.width * 0.45,
-              child: Image.asset("assets/images/map.png", width: 50,),
+              child: Image.asset(
+                "assets/images/map.png",
+                width: 50,
+              ),
             ),
-            Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              crossAxisAlignment: CrossAxisAlignment.center,
-              children: <Widget>[
-                Center(
-                  child: Text.rich(TextSpan(children: <TextSpan>[
-                    TextSpan(text: _locationData.longitude.toString()),
-                    TextSpan(text: " / "),
-                    TextSpan(text: _locationData.latitude.toString())
-                  ])),
-                ),
-                Center(
-                    child: RaisedButton(
-                  onPressed: () {
-                    Provider.of<PositionService>(context, listen: false)
-                        .longitude = _locationData.longitude;
-                    Provider.of<PositionService>(context, listen: false)
-                        .latitude = _locationData.latitude;
-                  },
-                  child: Text("Make as start"),
-                )),
-                Center(
-                  child: Text.rich(TextSpan(children: <TextSpan>[
-                    TextSpan(text: "actually at "),
-                    TextSpan(text: _distance.toInt().toString()),
-                    TextSpan(text: " meters from the starting point")
-                  ])),
-                ),
-              ],
-            )
+            Material(
+              clipBehavior: Clip.antiAlias,
+              animationDuration: Duration(seconds: 1),
+              color: Colors.transparent,
+              child: Center(
+                child: Container(
+                  height: 200,
+                  width: 400,
+                  child: Card(
+                    child: Stack(children: <Widget>[
+                      Positioned(
+                        top: 40,
+                        left: 20,
+                        width: 200,
+                        child: Text("Currently at " + _addresse, style: TextStyle(
+                          fontSize: 10,
+                          fontWeight: FontWeight.bold,
+                        ),),
+                      ),
+                      Positioned(
+                        top: 30,
+                        right: 20,
+                        child: RaisedButton(
+                          color: Colors.orange,
+                          onPressed: () {
+                            Provider.of<PositionService>(context, listen: false).longitude = _locationData.longitude;
+                            Provider.of<PositionService>(context, listen: false).latitude = _locationData.latitude;
+                            Provider.of<PositionService>(context, listen: false).addresse= _addresse;
+                          },
+                          child: Text("Make as start", style: TextStyle(
+                            color: Colors.white,
+                          ),),
+                        )
+                      ),
+                      Positioned(
+                        bottom: 40,
+                        left: 175,
+                        child:
+                          Text(_distance.toInt().toString(), style: TextStyle(
+                            color: Colors.orange,
+                            fontSize: 50,
+                            fontWeight: FontWeight.bold,
+                          ),),
+                      ),
+                      Positioned(
+                        bottom: 30,
+                        left: 125,
+                        child: 
+                          Text("meters from starting point", style: TextStyle(
+                            fontSize: 10,
+                            color: Colors.grey
+                          ),),
+                      )
+                    ]),
+                  )
+                )
+              )
+            ),
           ],
         ),
       );
@@ -453,7 +517,10 @@ class RedPage extends State<MyStatefulRedPage> {
             Positioned(
               top: MediaQuery.of(context).size.height * 0.2,
               left: MediaQuery.of(context).size.width * 0.45,
-              child: Image.asset("assets/images/map.png", width: 50,),
+              child: Image.asset(
+                "assets/images/map.png",
+                width: 50,
+              ),
             ),
           ],
         ),
@@ -478,6 +545,11 @@ class GreenPage extends State<MyStatefulGreenPage> {
     super.initState();
   }
 
+  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+  }
+
   void _handleSubmitted(String finalinput) {
     setState(() {
       settings.boundary = int.parse(finalinput);
@@ -487,6 +559,20 @@ class GreenPage extends State<MyStatefulGreenPage> {
 
   _setBoundary() {
     TextField _textField = new TextField(
+      textAlign: TextAlign.end,
+      decoration: InputDecoration(
+          border: new OutlineInputBorder(
+            borderRadius: const BorderRadius.all(
+              const Radius.circular(10.0),
+            ),
+          ),
+          filled: true,
+          fillColor: Colors.grey,
+          labelText: "Boundary",
+          labelStyle: TextStyle(
+            fontWeight: FontWeight.bold,
+            color: Colors.orange,
+          )),
       controller: _controller,
       onSubmitted: _handleSubmitted,
       keyboardType: TextInputType.number,
@@ -532,30 +618,47 @@ class GreenPage extends State<MyStatefulGreenPage> {
             ),
           ),
           Positioned(
-              top: MediaQuery.of(context).size.height * 0.205,
-              left: MediaQuery.of(context).size.width * 0.45,
-              child: Image.asset("assets/images/gear.png", width: 50,),
+            top: MediaQuery.of(context).size.height * 0.205,
+            left: MediaQuery.of(context).size.width * 0.45,
+            child: Image.asset(
+              "assets/images/gear.png",
+              width: 50,
+            ),
           ),
-          Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              crossAxisAlignment: CrossAxisAlignment.center,
-              children: <Widget>[
-                Center(
-                  child: Text("Boundary :"),
-                ),
-                Center(
-                  child: _setBoundary(),
-                ),
-                Center(
-                  child: Text("Enable alerts :"),
-                ),
-                Center(
-                  child: Checkbox(
-                    value: settings.enableAlerts,
-                    onChanged: (value) => _setAlerts(value),
-                  ),
-                )
-              ])
+          Material(
+              clipBehavior: Clip.antiAlias,
+              animationDuration: Duration(seconds: 1),
+              color: Colors.transparent,
+              child: Center(
+                  child: Container(
+                      height: 200,
+                      width: 400,
+                      child: Card(
+                        child: Stack(children: <Widget>[
+                          Positioned(
+                            width: 350,
+                            top: 20,
+                            left: 20,
+                            child: _setBoundary(),
+                          ),
+                          Positioned(
+                            bottom: 50,
+                            left: 100,
+                            child: Text(
+                              "Enable alerts :",
+                              style: TextStyle(fontWeight: FontWeight.bold),
+                            ),
+                          ),
+                          Positioned(
+                            bottom: 35,
+                            right: 100,
+                            child: Checkbox(
+                              value: settings.enableAlerts,
+                              onChanged: (value) => _setAlerts(value),
+                            ),
+                          )
+                        ]),
+                      )))),
         ],
       ),
     );

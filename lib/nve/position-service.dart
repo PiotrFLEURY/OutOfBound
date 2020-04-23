@@ -3,6 +3,12 @@ import 'package:flutter/material.dart';
 class PositionService with ChangeNotifier {
   double _startingLongitude;
   double _startingLatitude;
+  String _addresse;
+
+  set addresse(String addresse) {
+    _addresse = addresse;
+    notifyListeners();
+  }
 
   set longitude(double longitude) {
     _startingLongitude = longitude;
@@ -20,5 +26,9 @@ class PositionService with ChangeNotifier {
 
   double get latitude {
     return _startingLatitude;
+  }
+
+  String get addresse {
+    return _addresse;
   }
 }
