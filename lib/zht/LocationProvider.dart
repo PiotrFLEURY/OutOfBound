@@ -8,6 +8,7 @@ class LocationProvider with ChangeNotifier {
   LocationData _startingPosition;
   double _distance;
   bool _haveDistance=false;
+  
 
   /*Send MAJ*/
   set starting(LocationData value) {
