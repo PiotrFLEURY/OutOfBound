@@ -6,9 +6,7 @@ import 'package:OutOfBounds/zht/pages/ActualPosition.dart';
 import 'package:OutOfBounds/zht/pages/SettingsPage.dart';
 import 'package:provider/provider.dart';
 
-const WIDTH = 100.0;
-const HEIGHT = 36.0;
-const TEXT_SIZE = 7.5;
+const TEXT_SIZE = 9.0;
 const ICON_SIZE= 12.0;
  
 class ZhtMainPage extends StatefulWidget {
@@ -26,7 +24,7 @@ class MyAppState extends State<ZhtMainPage> {
     SettingsPage(),
   ];
 
-  Alignment aligne = Alignment.bottomLeft;
+  Alignment aligne = Alignment.centerLeft;
   Color newColorsStarting =  Color.fromARGB(255, 128, 128, 128);
   Color newColorsCurrent =  Color.fromARGB(255, 128, 128, 128);
   Color newColorsSettings =  Color.fromARGB(255, 128, 128, 128);
@@ -54,29 +52,30 @@ class MyAppState extends State<ZhtMainPage> {
             ),
             child: Stack( 
               children: <Widget>[
-                AnimatedAlign(
-                  alignment: aligne,
-                  duration: Duration(milliseconds: 400),     
-                  child: Container(
-                    width: WIDTH,
-                    height: HEIGHT,
-                    margin: EdgeInsets.only(bottom:5.0), 
-                    decoration:BoxDecoration(color:Colors.orange,borderRadius: BorderRadius.circular(10)),
+                Padding(
+                  padding: const EdgeInsets.all(4.0),
+                  child:AnimatedAlign(
+                    alignment: aligne,
+                    duration: Duration(milliseconds: 400),     
+                    child: Container(
+                      width: MediaQuery.of(context).size.width / 3,
+                      decoration:BoxDecoration(color:Colors.orange,borderRadius: BorderRadius.circular(10)),
+                    ),
                   ),
                 ),
                 Row( 
                   mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                   children: <Widget>[
-                    Container( 
-                      padding: EdgeInsets.only(bottom:4.0),      
-                      alignment: Alignment.bottomLeft,
+                    Expanded( 
                       child:FlatButton.icon(    
-                        label: Text("Starting location",style: new TextStyle(fontSize:TEXT_SIZE,color:newColorsStarting)),
+                        label: Flexible(
+                          child: Text("Starting location",style: new TextStyle(fontSize:TEXT_SIZE,color:newColorsStarting,),textAlign:TextAlign.center,),
+                        ),
                         icon:Icon(Icons.location_city, color:newColorsStarting,size: ICON_SIZE,),
                         onPressed: (){
                           setState(() {
                             whoSelected=0;
-                            aligne= Alignment.bottomLeft;
+                            aligne= Alignment.centerLeft;
                             newColorsStarting=Colors.white;
                             newColorsCurrent=Colors.grey;
                             newColorsSettings=Colors.grey;
@@ -84,16 +83,16 @@ class MyAppState extends State<ZhtMainPage> {
                         }
                       ),
                     ),
-                    Container( 
-                      padding: EdgeInsets.only(bottom:4.0),     
-                      alignment: Alignment.bottomCenter,
+                    Expanded( 
                       child: FlatButton.icon(          
-                        label: Text("Current Location",style: new TextStyle(fontSize:TEXT_SIZE,color:newColorsCurrent)),
+                        label: Flexible(
+                          child:Text("Current Location",style: new TextStyle(fontSize:TEXT_SIZE,color:newColorsCurrent),textAlign:TextAlign.center),
+                        ),
                         icon:Icon(Icons.my_location, color:newColorsCurrent,size: ICON_SIZE,),
                         onPressed: (){
                           setState(() {
                             whoSelected=1;
-                            aligne= Alignment.bottomCenter ;
+                            aligne= Alignment.center;
                             newColorsStarting=Colors.grey;
                             newColorsCurrent=Colors.white;
                             newColorsSettings=Colors.grey;
@@ -101,16 +100,14 @@ class MyAppState extends State<ZhtMainPage> {
                         }
                       )
                     ),
-                    Container( 
-                      padding: EdgeInsets.only(bottom:4.0),
-                      alignment: Alignment.bottomRight,
+                    Expanded( 
                       child: FlatButton.icon(    
                         label: Text("Settings",style: new TextStyle(fontSize:TEXT_SIZE,color:newColorsSettings)),
                         icon:Icon(Icons.settings, color:newColorsSettings,size: ICON_SIZE,),
                           onPressed: (){
                             setState(() {
                               whoSelected=2;         
-                              aligne= Alignment.bottomRight;
+                              aligne= Alignment.centerRight;
                               newColorsStarting=Colors.grey;
                               newColorsCurrent=Colors.grey;
                               newColorsSettings=Colors.white;
