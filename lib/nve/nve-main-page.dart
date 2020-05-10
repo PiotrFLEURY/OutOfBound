@@ -19,6 +19,10 @@ LocationData _locationData;
 FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin =
     FlutterLocalNotificationsPlugin();
 NotificationService notificationService = new NotificationService();
+Image _image = Image.asset(
+        "assets/images/mansion.png",
+        width: 50,
+      );
 
 class NveMainPage extends StatelessWidget {
   @override
@@ -57,6 +61,7 @@ class FirstScreen extends State<MyStatefulWidget> {
     MyStatefulRedPage(),
     MyStatefulGreenPage()
   ];
+  PageController _pageViewController = PageController();
 
   Future<void> isOutOfBounds() async {
     double distance = await geo.distanceBetween(
@@ -122,22 +127,70 @@ class FirstScreen extends State<MyStatefulWidget> {
       switch (index) {
         case 0:
           _alignment = Alignment.bottomLeft;
+          _image = Image.asset(
+            "assets/images/mansion.png",
+            width: 50,
+          );
           break;
         case 1:
           _alignment = Alignment.bottomCenter;
+          _image = Image.asset(
+            "assets/images/map.png",
+            width: 50,
+          );
           break;
         case 2:
           _alignment = Alignment.bottomRight;
+          _image = Image.asset(
+            "assets/images/gear.png",
+            width: 50,
+          );
           break;
       }
       _selectedIndex = index;
+      animatePageChange();
     });
+  }
+
+  animatePageChange() async {
+    await _pageViewController.animateToPage(
+        _selectedIndex,
+        duration: Duration(milliseconds: 500),
+        curve: Curves.decelerate,
+      );
   }
 
   @override
   Widget build(BuildContext ctxt) {
     return new Scaffold(
-      body: _children[_selectedIndex],
+      body: Stack(children: <Widget>[
+        PageView(
+          controller: _pageViewController,
+          scrollDirection: Axis.horizontal,
+          children: _children,
+        ),
+        ClipPath(
+          clipper: MyCustomClipper(),
+          child: new Image.asset("assets/images/googlemap.png"),
+        ),
+        Positioned(
+          top: MediaQuery.of(context).size.height * 0.19,
+          left: MediaQuery.of(context).size.width * 0.42,
+          child: ClipOval(
+            child: Container(
+              width: 75,
+              height: 75,
+              color: Colors.white,
+            ),
+          ),
+        ),
+        Positioned(
+          top: MediaQuery.of(context).size.height * 0.2,
+          left: MediaQuery.of(context).size.width * 0.45,
+          child: _image,
+        ),
+        ],
+      ),
       bottomNavigationBar: Container(
           width: MediaQuery.of(context).size.width,
           alignment: Alignment.bottomCenter,
@@ -242,29 +295,6 @@ class BluePage extends State<MyStatefulBluePage> {
         backgroundColor: Colors.blue,
         body: Stack(
           children: <Widget>[
-            ClipPath(
-              clipper: MyCustomClipper(),
-              child: new Image.asset("assets/images/googlemap.png"),
-            ),
-            Positioned(
-              top: MediaQuery.of(context).size.height * 0.19,
-              left: MediaQuery.of(context).size.width * 0.42,
-              child: ClipOval(
-                child: Container(
-                  width: 75,
-                  height: 75,
-                  color: Colors.white,
-                ),
-              ),
-            ),
-            Positioned(
-              top: MediaQuery.of(context).size.height * 0.2,
-              left: MediaQuery.of(context).size.width * 0.45,
-              child: Image.asset(
-                "assets/images/mansion.png",
-                width: 50,
-              ),
-            ),
             Material(
               clipBehavior: Clip.antiAlias,
               animationDuration: Duration(seconds: 1),
@@ -410,29 +440,6 @@ class RedPage extends State<MyStatefulRedPage> {
         backgroundColor: Colors.red,
         body: Stack(
           children: <Widget>[
-            ClipPath(
-              clipper: MyCustomClipper(),
-              child: new Image.asset("assets/images/googlemap.png"),
-            ),
-            Positioned(
-              top: MediaQuery.of(context).size.height * 0.19,
-              left: MediaQuery.of(context).size.width * 0.42,
-              child: ClipOval(
-                child: Container(
-                  width: 75,
-                  height: 75,
-                  color: Colors.white,
-                ),
-              ),
-            ),
-            Positioned(
-              top: MediaQuery.of(context).size.height * 0.2,
-              left: MediaQuery.of(context).size.width * 0.45,
-              child: Image.asset(
-                "assets/images/map.png",
-                width: 50,
-              ),
-            ),
             Material(
               clipBehavior: Clip.antiAlias,
               animationDuration: Duration(seconds: 1),
@@ -602,29 +609,6 @@ class GreenPage extends State<MyStatefulGreenPage> {
       backgroundColor: Colors.green,
       body: Stack(
         children: <Widget>[
-          ClipPath(
-            clipper: MyCustomClipper(),
-            child: new Image.asset("assets/images/googlemap.png"),
-          ),
-          Positioned(
-            top: MediaQuery.of(context).size.height * 0.19,
-            left: MediaQuery.of(context).size.width * 0.42,
-            child: ClipOval(
-              child: Container(
-                width: 75,
-                height: 75,
-                color: Colors.white,
-              ),
-            ),
-          ),
-          Positioned(
-            top: MediaQuery.of(context).size.height * 0.205,
-            left: MediaQuery.of(context).size.width * 0.45,
-            child: Image.asset(
-              "assets/images/gear.png",
-              width: 50,
-            ),
-          ),
           Material(
               clipBehavior: Clip.antiAlias,
               animationDuration: Duration(seconds: 1),
