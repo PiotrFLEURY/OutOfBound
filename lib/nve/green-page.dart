@@ -14,14 +14,6 @@ class GreenPage extends State<MyStatefulGreenPage> {
   TextEditingController _controller = new TextEditingController();
   FocusNode _textNode = new FocusNode();
 
-  void initState() {
-    super.initState();
-  }
-
-  void didChangeDependencies() {
-    super.didChangeDependencies();
-  }
-
   void _handleSubmitted(String finalinput) {
     setState(() {
       settings.boundary = int.parse(finalinput);
