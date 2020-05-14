@@ -60,7 +60,7 @@ class BluePage extends State<MyStatefulBluePage> {
                         top: 40,
                         left: 35,
                         width: 350,
-                        child: Text(Provider.of<PositionService>(context, listen: false).addresse, style: TextStyle(
+                        child: Text(positionProvider().addresse, style: TextStyle(
                           fontSize: 12,
                           fontWeight: FontWeight.bold,
                         ),),

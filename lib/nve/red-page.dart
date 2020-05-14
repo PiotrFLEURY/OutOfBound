@@ -52,10 +52,16 @@ class RedPage extends State<MyStatefulRedPage> {
   }
 
   Future<String> getAddress() async {
-    final _coordinates = new Coordinates(_locationData.latitude, _locationData.longitude);
-    var _addresses = await Geocoder.local.findAddressesFromCoordinates(_coordinates);
-    var _first = _addresses.first;
-    return _first.addressLine;
+    if (_locationData != null) {
+      final _coordinates = new Coordinates(_locationData.latitude, _locationData.longitude);
+      if (_coordinates != null) {
+        var _addresses = await Geocoder.local.findAddressesFromCoordinates(_coordinates);
+        var _first = _addresses.first;
+        return _first.addressLine;
+      }
+      return "";     
+    }
+    return "";
   }
 
   @override

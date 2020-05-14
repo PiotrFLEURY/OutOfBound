@@ -14,12 +14,10 @@ class GreenPage extends State<MyStatefulGreenPage> {
   TextEditingController _controller = new TextEditingController();
   FocusNode _textNode = new FocusNode();
 
-  @override
   void initState() {
     super.initState();
   }
 
-  @override
   void didChangeDependencies() {
     super.didChangeDependencies();
   }

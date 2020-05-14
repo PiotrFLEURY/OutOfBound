@@ -164,10 +164,13 @@ class FirstScreen extends State<MyStatefulWidget> {
   Widget build(BuildContext ctxt) {
     return new Scaffold(
       body: Stack(children: <Widget>[
-        PageView(
-          controller: _pageViewController,
-          scrollDirection: Axis.horizontal,
-          children: _children,
+        Padding(
+          padding: const EdgeInsets.only(top: 150),
+          child: PageView(
+            controller: _pageViewController,
+            scrollDirection: Axis.horizontal,
+            children: _children,
+          ),
         ),
         ClipPath(
           clipper: MyCustomClipper(),
